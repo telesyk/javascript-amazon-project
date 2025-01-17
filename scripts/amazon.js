@@ -1,30 +1,38 @@
-import { PRODUCTS } from '../data/products.js';
+/**
+ * @constant PRODUCTS - data loaded to the HTML page directly
+ * @function renderProducts - make the rendering of all products, take the data from data/products.js
+ *  */
+renderProducts(PRODUCTS);
 
-function renderProducts() {
+function renderProducts(productsList) {
+  if (!productsList) return;
+
   const productsElement = document.querySelector('#jsProductsGrid');
   const productsFragment = new DocumentFragment();
-  
-  PRODUCTS.forEach(item => {
-    const productsTemplate = `
+
+  const renderProductTemplate = (product) => {
+    if (!product) return;
+
+    return `
       <div class="product-container">
         <div class="product-image-container">
-          <img class="product-image" src="${item.image}">
+          <img class="product-image" src="${product.image}">
         </div>
   
         <div class="product-name limit-text-to-2-lines">
-          ${item.name}
+          ${product.name}
         </div>
   
         <div class="product-rating-container">
           <img class="product-rating-stars"
-            src="images/ratings/rating-${item.rating.stars * 10}.png">
+            src="images/ratings/rating-${product.rating.stars * 10}.png">
           <div class="product-rating-count link-primary">
-            ${item.rating.count}
+            ${product.rating.count}
           </div>
         </div>
   
         <div class="product-price">
-          $${item.priceCents / 100}
+          $${product.priceCents / 100}
         </div>
   
         <div class="product-quantity-container">
@@ -54,6 +62,10 @@ function renderProducts() {
         </button>
       </div>
     `;
+  };
+  
+  productsList.forEach(item => {
+    const productsTemplate = renderProductTemplate(item);
     const parser = new DOMParser();
     const productParsed = parser.parseFromString(productsTemplate, 'text/html');
   
@@ -62,5 +74,3 @@ function renderProducts() {
   
   productsElement.append(productsFragment);
 }
-
-renderProducts();
