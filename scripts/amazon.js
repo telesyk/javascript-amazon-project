@@ -10,11 +10,36 @@ function renderProducts(productsList) {
   const productsElement = document.querySelector('#jsProductsGrid');
   const productsFragment = new DocumentFragment();
 
+  const renderQuantityHTML = (quantity) => {
+    if (!quantity) return;
+
+    return `<div class="product-quantity-left">Only <b>${quantity}</b> left</div>`;
+  };
+
+  const renderSelectHTML = (count) => {
+    if (!count) return;
+
+    const optionsList = createArr(count);
+
+    return `
+      <select>
+        ${optionsList.map((item, index) => {
+          if (index === 0) {
+            return `<option selected value="${item}">${item}</option>`;
+          }
+          return `<option value="${item}">${item}</option>`;
+        })}
+      </select>
+    `;
+  };
+
   const renderProductTemplate = (product) => {
     if (!product) return;
 
     const productRateImgName = product.rating.stars * 10;
     const productPrice = (product.priceCents / 100).toFixed(2);
+    const quantityHTML = renderQuantityHTML(product.quantity);
+    const selectHTML = renderSelectHTML(product.quantity);
 
     return `
       <div class="product-container">
@@ -33,18 +58,8 @@ function renderProducts(productsList) {
         <div class="product-price">$${productPrice}</div>
   
         <div class="product-quantity-container">
-          <select>
-            <option selected value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-          </select>
+          ${product.quantity < 2 ? product.quantity : selectHTML}
+          ${product.quantity < 5 ? quantityHTML : ''}
         </div>
   
         <div class="product-spacer"></div>
@@ -70,4 +85,14 @@ function renderProducts(productsList) {
   });
   
   productsElement.append(productsFragment);
+}
+
+function createArr(count) {
+  let newArr = [];
+
+  for (let i = 0; i < count; i++) {
+    newArr.push('' + (i + 1));
+  }
+
+  return newArr;
 }

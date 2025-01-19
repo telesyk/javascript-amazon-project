@@ -12,7 +12,8 @@ const PRODUCTS = [
       "socks",
       "sports",
       "apparel"
-    ]
+    ],
+    quantity: 4
   },
   {
     id: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
@@ -26,7 +27,8 @@ const PRODUCTS = [
     keywords: [
       "sports",
       "basketballs"
-    ]
+    ],
+    quantity: 15
   },
   {
     id: "83d4ca15-0f35-48f5-b7a3-1ea210004f2e",
@@ -42,6 +44,7 @@ const PRODUCTS = [
       "apparel",
       "mens"
     ],
+    quantity: 1,
     type: "clothing",
     sizeChartLink: "images/clothing-size-chart.png"
   },
@@ -58,7 +61,8 @@ const PRODUCTS = [
       "toaster",
       "kitchen",
       "appliances"
-    ]
+    ],
+    quantity: 3
   },
   {
     id: "3ebe75dc-64d2-4137-8860-1f5a963e534b",
@@ -73,7 +77,8 @@ const PRODUCTS = [
       "plates",
       "kitchen",
       "dining"
-    ]
+    ],
+    quantity: 5
   },
   {
     id: "8c9c52b5-5a19-4bcb-a5d1-158a74287c53",
@@ -87,7 +92,8 @@ const PRODUCTS = [
     keywords: [
       "kitchen",
       "cookware"
-    ]
+    ],
+    quantity: 6
   },
   {
     id: "dd82ca78-a18b-4e2a-9250-31e67412f98d",
@@ -102,7 +108,8 @@ const PRODUCTS = [
       "hoodies",
       "sweaters",
       "apparel"
-    ]
+    ],
+    quantity: 2
   },
   {
     id: "77919bbe-0e56-475b-adde-4f24dfed3a04",
@@ -119,7 +126,8 @@ const PRODUCTS = [
       "restroom",
       "towels",
       "bath towels"
-    ]
+    ],
+    quantity: 7
   },
   {
     id: "3fdfe8d6-9a15-4979-b459-585b0d0545b9",
@@ -133,7 +141,8 @@ const PRODUCTS = [
     keywords: [
       "bathroom",
       "cleaning"
-    ]
+    ],
+    quantity: 14
   },
   {
     id: "58b4fc92-e98c-42aa-8c55-b6b79996769a",
@@ -148,7 +157,8 @@ const PRODUCTS = [
       "shoes",
       "running shoes",
       "footwear"
-    ]
+    ],
+    quantity: 12
   },
   {
     id: "5968897c-4d27-4872-89f6-5bcb052746d7",
@@ -166,6 +176,7 @@ const PRODUCTS = [
       "bathing",
       "apparel"
     ],
+    quantity: 13,
     type: "clothing",
     sizeChartLink: "images/clothing-size-chart.png"
   },
@@ -181,7 +192,8 @@ const PRODUCTS = [
     keywords: [
       "accessories",
       "shades"
-    ]
+    ],
+    quantity: 14
   },
   {
     id: "04701903-bc79-49c6-bc11-1af7e3651358",
@@ -198,7 +210,8 @@ const PRODUCTS = [
       "womens",
       "beach",
       "summer"
-    ]
+    ],
+    quantity: 15
   },
   {
     id: "901eb2ca-386d-432e-82f0-6fb1ee7bf969",
@@ -213,7 +226,8 @@ const PRODUCTS = [
       "bedroom",
       "curtains",
       "home"
-    ]
+    ],
+    quantity: 6
   },
   {
     id: "82bb68d7-ebc9-476a-989c-c78a40ee5cd9",
@@ -228,7 +242,8 @@ const PRODUCTS = [
       "shorts",
       "apparel",
       "mens"
-    ]
+    ],
+    quantity: 7
   },
   {
     id: "c2a82c5e-aff4-435f-9975-517cfaba2ece",
@@ -243,7 +258,8 @@ const PRODUCTS = [
       "water boiler",
       "appliances",
       "kitchen"
-    ]
+    ],
+    quantity: 8
   },
   {
     id: "6b07d4e7-f540-454e-8a1e-363f25dbae7d",
@@ -260,7 +276,8 @@ const PRODUCTS = [
       "kitchen",
       "tissues box",
       "napkins"
-    ]
+    ],
+    quantity: 9
   },
   {
     id: "a82c6bac-3067-4e68-a5ba-d827ac0be010",
@@ -276,7 +293,8 @@ const PRODUCTS = [
       "straw hats",
       "summer",
       "apparel"
-    ]
+    ],
+    quantity: 3
   },
   {
     id: "e4f64a65-1377-42bc-89a5-e572d19252e2",
@@ -291,7 +309,8 @@ const PRODUCTS = [
       "jewelry",
       "accessories",
       "womens"
-    ]
+    ],
+    quantity: 1
   },
   {
     id: "b0f17cc5-8b40-4ca5-9142-b61fe3d98c85",
@@ -309,6 +328,7 @@ const PRODUCTS = [
       "womens",
       "apparel"
     ],
+    quantity: 10,
     type: "clothing",
     sizeChartLink: "images/clothing-size-chart.png"
   },
@@ -325,7 +345,8 @@ const PRODUCTS = [
       "bathmat",
       "bathroom",
       "home"
-    ]
+    ],
+    quantity: 11
   },
   {
     id: "4f4fbcc2-4e72-45cc-935c-9e13d79cc57f",
@@ -341,7 +362,8 @@ const PRODUCTS = [
       "flats",
       "womens",
       "footwear"
-    ]
+    ],
+    quantity: 4
   },
   {
     id: "8b5a2ee1-6055-422a-a666-b34ba28b76d4",
@@ -358,6 +380,7 @@ const PRODUCTS = [
       "apparel",
       "mens"
     ],
+    quantity: 9,
     type: "clothing",
     sizeChartLink: "images/clothing-size-chart.png"
   },
@@ -375,7 +398,8 @@ const PRODUCTS = [
       "bins",
       "cans",
       "kitchen"
-    ]
+    ],
+    quantity: 7
   },
   {
     id: "19c6a64a-5463-4d45-9af8-e41140a4100c",
@@ -392,7 +416,8 @@ const PRODUCTS = [
       "sheets",
       "covers",
       "home"
-    ]
+    ],
+    quantity: 3
   },
   {
     id: "d2785924-743d-49b3-8f03-ec258e640503",
@@ -410,7 +435,8 @@ const PRODUCTS = [
       "tuques",
       "apparel",
       "womens"
-    ]
+    ],
+    quantity: 13
   },
   {
     id: "ee1f7c56-f977-40a4-9642-12ba5072e2b0",
@@ -425,7 +451,8 @@ const PRODUCTS = [
       "pants",
       "apparel",
       "mens"
-    ]
+    ],
+    quantity: 1
   },
   {
     id: "1c079479-8586-494f-ab53-219325432536",
@@ -441,7 +468,8 @@ const PRODUCTS = [
       "running shoes",
       "footwear",
       "mens"
-    ]
+    ],
+    quantity: 12
   },
   {
     id: "4df68c27-fd59-4a6a-bbd1-e754ddb6d53c",
@@ -457,7 +485,8 @@ const PRODUCTS = [
       "glasses",
       "accessories",
       "shades"
-    ]
+    ],
+    quantity: 15
   },
   {
     id: "4e37dd03-3b23-4bc6-9ff8-44e112a92c64",
@@ -471,7 +500,8 @@ const PRODUCTS = [
     keywords: [
       "cooking set",
       "kitchen"
-    ]
+    ],
+    quantity: 3
   },
   {
     id: "a434b69f-1bc1-482d-9ce7-cd7f4a66ce8d",
@@ -487,7 +517,8 @@ const PRODUCTS = [
       "washroom",
       "mirrors",
       "home"
-    ]
+    ],
+    quantity: 4
   },
   {
     id: "a45cfa0a-66d6-4dc7-9475-e2b01595f7d7",
@@ -504,7 +535,8 @@ const PRODUCTS = [
       "jogging",
       "apparel",
       "womens"
-    ]
+    ],
+    quantity: 2
   },
   {
     id: "d339adf3-e004-4c20-a120-40e8874c66cb",
@@ -518,7 +550,8 @@ const PRODUCTS = [
     keywords: [
       "accessories",
       "womens"
-    ]
+    ],
+    quantity: 3
   },
   {
     id: "d37a651a-d501-483b-aae6-a9659b0757a0",
@@ -533,7 +566,8 @@ const PRODUCTS = [
       "boxes",
       "food containers",
       "kitchen"
-    ]
+    ],
+    quantity: 8
   },
   {
     id: "0d7f9afa-2efe-4fd9-b0fd-ba5663e0a524",
@@ -548,7 +582,8 @@ const PRODUCTS = [
       "coffeemakers",
       "kitchen",
       "appliances"
-    ]
+    ],
+    quantity: 4
   },
   {
     id: "02e3a47e-dd68-467e-9f71-8bf6f723fdae",
@@ -562,7 +597,8 @@ const PRODUCTS = [
     keywords: [
       "bedroom",
       "home"
-    ]
+    ],
+    quantity: 5
   },
   {
     id: "8a53b080-6d40-4a65-ab26-b24ecf700bce",
@@ -577,7 +613,8 @@ const PRODUCTS = [
       "bathroom",
       "home",
       "towels"
-    ]
+    ],
+    quantity: 6
   },
   {
     id: "10ed8504-57db-433c-b0a3-fc71a35c88a1",
@@ -593,7 +630,8 @@ const PRODUCTS = [
       "running shoes",
       "footwear",
       "womens"
-    ]
+    ],
+    quantity: 9
   },
   {
     id: "77a845b1-16ed-4eac-bdf9-5b591882113d",
@@ -608,7 +646,8 @@ const PRODUCTS = [
       "food blenders",
       "kitchen",
       "appliances"
-    ]
+    ],
+    quantity: 8
   },
   {
     id: "36c64692-677f-4f58-b5ec-0dc2cf109e27",
@@ -624,7 +663,8 @@ const PRODUCTS = [
       "baking",
       "cookware",
       "kitchen"
-    ]
+    ],
+    quantity: 1
   },
   {
     id: "aaa65ef3-8d6f-4eb3-bc9b-a6ea49047d8f",
@@ -639,7 +679,8 @@ const PRODUCTS = [
       "kitchen",
       "kitchen towels",
       "tissues"
-    ]
+    ],
+    quantity: 3
   },
   {
     id: "bc2847e9-5323-403f-b7cf-57fde044a955",
@@ -655,6 +696,7 @@ const PRODUCTS = [
       "hoodies",
       "apparel",
       "mens"
-    ]
+    ],
+    quantity: 4
   }
 ];
