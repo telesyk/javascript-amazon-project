@@ -13,27 +13,24 @@ function renderProducts(productsList) {
   const renderProductTemplate = (product) => {
     if (!product) return;
 
+    const productRateImgName = product.rating.stars * 10;
+    const productPrice = (product.priceCents / 100).toFixed(2);
+
     return `
       <div class="product-container">
         <div class="product-image-container">
           <img class="product-image" src="${product.image}">
         </div>
   
-        <div class="product-name limit-text-to-2-lines">
-          ${product.name}
-        </div>
+        <div class="product-name limit-text-to-2-lines">${product.name}</div>
   
         <div class="product-rating-container">
           <img class="product-rating-stars"
-            src="images/ratings/rating-${product.rating.stars * 10}.png">
-          <div class="product-rating-count link-primary">
-            ${product.rating.count}
-          </div>
+            src="images/ratings/rating-${productRateImgName}.png">
+          <div class="product-rating-count link-primary">${product.rating.count}</div>
         </div>
   
-        <div class="product-price">
-          $${product.priceCents / 100}
-        </div>
+        <div class="product-price">$${productPrice}</div>
   
         <div class="product-quantity-container">
           <select>
