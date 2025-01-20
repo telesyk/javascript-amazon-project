@@ -11,13 +11,13 @@ function renderProducts(productsList) {
   const productsFragment = new DocumentFragment();
 
   const renderQuantityHTML = (quantity) => {
-    if (!quantity) return;
+    if (!quantity) return '';
 
     return `<div class="product-quantity-left">Only <b>${quantity}</b> left</div>`;
   };
 
   const renderSelectHTML = (count) => {
-    if (!count) return;
+    if (!count) return '';
 
     const optionsList = createArr(count);
 
@@ -36,10 +36,14 @@ function renderProducts(productsList) {
   const renderProductTemplate = (product) => {
     if (!product) return;
 
+    const isCardActive = product.quantity > 0;
     const productRateImgName = product.rating.stars * 10;
     const productPrice = (product.priceCents / 100).toFixed(2);
     const quantityHTML = renderQuantityHTML(product.quantity);
     const selectHTML = renderSelectHTML(product.quantity);
+    const selectContent = product.quantity === 0 ? 'No items left' :
+                          product.quantity === 1 ? product.quantity :
+                          selectHTML;
 
     return `
       <div class="product-container">
@@ -58,7 +62,7 @@ function renderProducts(productsList) {
         <div class="product-price">$${productPrice}</div>
   
         <div class="product-quantity-container">
-          ${product.quantity < 2 ? product.quantity : selectHTML}
+          ${selectContent}
           ${product.quantity < 5 ? quantityHTML : ''}
         </div>
   
@@ -69,7 +73,7 @@ function renderProducts(productsList) {
           Added
         </div>
   
-        <button class="add-to-cart-button button-primary">
+        <button aria-disabled="false" ${isCardActive ? '' : 'disabled'} class="add-to-cart-button button-primary">
           Add to Cart
         </button>
       </div>
