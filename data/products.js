@@ -1,4 +1,4 @@
-const PRODUCTS = [
+export const PRODUCTS = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     image: "images/products/athletic-cotton-socks-6-pairs.jpg",
@@ -647,7 +647,7 @@ const PRODUCTS = [
       "kitchen",
       "appliances"
     ],
-    quantity: 8
+    quantity: 0
   },
   {
     id: "36c64692-677f-4f58-b5ec-0dc2cf109e27",
@@ -664,7 +664,7 @@ const PRODUCTS = [
       "cookware",
       "kitchen"
     ],
-    quantity: 1
+    quantity: 0
   },
   {
     id: "aaa65ef3-8d6f-4eb3-bc9b-a6ea49047d8f",
@@ -680,7 +680,7 @@ const PRODUCTS = [
       "kitchen towels",
       "tissues"
     ],
-    quantity: 3
+    quantity: 0
   },
   {
     id: "bc2847e9-5323-403f-b7cf-57fde044a955",
@@ -697,6 +697,6 @@ const PRODUCTS = [
       "apparel",
       "mens"
     ],
-    quantity: 4
+    quantity: 0
   }
 ];

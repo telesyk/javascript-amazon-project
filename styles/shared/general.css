@@ -60,14 +60,6 @@ button {
       box-shadow: none;
     }
   }
-
-  &:disabled {
-    --btn-background: rgb(192, 196, 196);
-    --btn-border-color: rgb(213, 217, 217);
-    cursor: not-allowed;
-    pointer-events: none;
-    opacity: 0.75;
-  }
 }
 
 select {
