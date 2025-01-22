@@ -1,8 +1,9 @@
-import { createArr, getStringAttributes } from "./utils.js";
+import { createIntArray, getStringAttributes } from "./utils.js";
 import { 
   EVENT_ADD_TO_CART,
   ATTRIBUTE_DATA_CONTROL,
   ATTRIBUTE_DATA_PRODUCT_ID,
+  SELECTOR_PRODUCT_GRID,
 } from "./constants.js";
 
 export const renderQuantityStringHTML = (quantity) => {
@@ -14,7 +15,7 @@ export const renderQuantityStringHTML = (quantity) => {
 export const renderSelectHTML = (count) => {
   if (!count) return '';
 
-  const optionsList = createArr(count);
+  const optionsList = createIntArray(count);
 
   return `
     <select>
@@ -40,7 +41,6 @@ export const renderAddButton = (options) => {
     </button>
   `;
 };
-
 
 export const renderProductCard = (data) => {
   if (!data) return;
@@ -92,4 +92,21 @@ export const renderProductCard = (data) => {
       ${!isCardActive ? '' : buttonHTML}
     </div>
   `;
+};
+
+export const renderProducts = (productsList) => {
+  if (!productsList) return;
+
+  const productsElement = document.querySelector(SELECTOR_PRODUCT_GRID);
+  const productsFragment = new DocumentFragment();
+  
+  productsList.forEach(item => {
+    const productsTemplate = renderProductCard(item);
+    const parser = new DOMParser();
+    const productParsed = parser.parseFromString(productsTemplate, 'text/html');
+  
+    productsFragment.append(productParsed.body.firstChild);
+  });
+  
+  productsElement.append(productsFragment);
 };
