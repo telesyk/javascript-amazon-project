@@ -1,3 +1,9 @@
+import { PRODUCTS } from "../data/products.js";
+/**
+ * 
+ * @param {Number} count integer number
+ * @returns an Array of numbers from 0 to ${count}
+ */
 export function createArr(count) {
   if (!count) return Error('Func "createArr" get uncorrect "count"');
   let newArr = [];
@@ -22,12 +28,12 @@ export function getStringAttributes(attrList) {
       attrString += ` ${key}="${value}"`;
     }
   });
-  /* 
-  arrList = [{
-    "data-attr": "some-data",
-    "more-attr": "another-attr"
-  }]
-  */
 
   return attrString;
+}
+
+export function getProductData(productID) {
+  const currentProduct = PRODUCTS.filter((product) => product.id === productID);
+
+  return currentProduct[0];
 }
