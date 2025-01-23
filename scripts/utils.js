@@ -1,5 +1,9 @@
 import { PRODUCTS } from "../data/products.js";
-import { PRODUCTS_STORAGE_NAME, SELECTOR_CART_QUANTITY } from "./constants.js";
+import { 
+  PRODUCTS_STORAGE_NAME,
+  PRODUCTS_STORAGE_STATE_NAME,
+  SELECTOR_CART_QUANTITY
+} from "./constants.js";
 /**
  * 
  * @param {Number} count integer number
@@ -37,10 +41,13 @@ export function getStringAttributes(attrList) {
  * 
  * @returns Object of current card details
  */
-export function getProductData(productID) {
+export function getProductData(productID, productQuantity) {
   const currentProduct = PRODUCTS.filter((product) => product.id === productID);
 
-  return currentProduct[0];
+  return {
+    quantity: !productQuantity ? 1 : productQuantity,
+    ...currentProduct[0]
+  };
 }
 
 /**
@@ -48,21 +55,66 @@ export function getProductData(productID) {
  * @param {Array} data list of products in cart
  * @returns empty Array when no any data || data from localSorage
  */
-export function updateLocalStorage(list) {
-  const localData = localStorage.getItem(PRODUCTS_STORAGE_NAME);
+export function updateCartState(data) {
+  const localCartState = localStorage.getItem(PRODUCTS_STORAGE_NAME);
   
-  if (!list) {
-    if (!localData) return [];
+  if (!data) {
+    if (!localCartState) return [];
 
-    return JSON.parse(localData);
+    return JSON.parse(localCartState);
   }
-  
-  localStorage.setItem(PRODUCTS_STORAGE_NAME, JSON.stringify(list));
+
+  localStorage.setItem(PRODUCTS_STORAGE_NAME, JSON.stringify(data));
 }
 
-export function updateCartCount() {
-  const localData = updateLocalStorage();
-  const cartCountElement = document.querySelector(SELECTOR_CART_QUANTITY);
+export function updateCartQuantity(data) {
+  if (!data || !(data instanceof Array)) return new Error('Invalid value of "data"');
   
-  cartCountElement.innerHTML = localData.length;
+  let quantity = 0;
+  const cartQuantityElement = document.querySelector(SELECTOR_CART_QUANTITY);
+
+  data.map(item => {
+    quantity += item.quantity || 0;
+  });
+  
+  cartQuantityElement.innerHTML = quantity;
+}
+
+export function groupCartItems(cartList, newItem) {
+  if (!cartList || !newItem) return new Error('Invalid values');
+
+  const isExist = cartList.find(item => item.id === newItem.id);
+  
+  if (!isExist) return [newItem, ...cartList];
+
+  const newList = cartList.map(item => {
+    if (item.id !== newItem.id) return item;
+
+    return {
+      ...item,
+      quantity: item.quantity + newItem.quantity,
+    }
+  });
+
+  return newList;
+}
+
+/**
+ * 
+ * @param {Array} data set/get the global products list
+ * @returns updated products list
+ */
+export function updateGlobalState(data) {
+  const localState = localStorage.getItem(PRODUCTS_STORAGE_STATE_NAME);
+
+  if (!data) {
+    if (!localState) {
+      localStorage.setItem(PRODUCTS_STORAGE_STATE_NAME, JSON.stringify(PRODUCTS));
+      return PRODUCTS;
+    };
+
+    return JSON.parse(localState);
+  }
+
+  localStorage.setItem(PRODUCTS_STORAGE_STATE_NAME, JSON.stringify(data));
 }

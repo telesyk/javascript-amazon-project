@@ -12,10 +12,10 @@ export const renderQuantityStringHTML = (quantity) => {
   return `<div class="product-quantity-left">Only <b>${quantity}</b> left</div>`;
 };
 
-export const renderSelectHTML = (count) => {
-  if (!count) return '';
+export const renderSelectHTML = (stockCount) => {
+  if (!stockCount) return '';
 
-  const optionsList = createIntArray(count);
+  const optionsList = createIntArray(stockCount);
 
   return `
     <select>
@@ -45,13 +45,13 @@ export const renderAddButton = (options) => {
 export const renderProductCard = (data) => {
   if (!data) return;
 
-  const isCardActive = data.quantity > 0;
+  const isCardActive = data.stock > 0;
   const productRateImgName = data.rating.stars * 10;
   const productPrice = (data.priceCents / 100).toFixed(2);
-  const quantityHTML = renderQuantityStringHTML(data.quantity);
-  const selectHTML = renderSelectHTML(data.quantity);
-  const selectContent = data.quantity === 0 ? 'No items left' :
-                        data.quantity === 1 ? data.quantity :
+  const quantityHTML = renderQuantityStringHTML(data.stock);
+  const selectHTML = renderSelectHTML(data.stock);
+  const selectContent = data.stock === 0 ? 'No items left' :
+                        data.stock === 1 ? data.stock :
                         selectHTML;
   const btnOptions = {
     attr: [{
@@ -80,7 +80,7 @@ export const renderProductCard = (data) => {
 
       <div class="product-quantity-container">
         ${selectContent}
-        ${data.quantity < 5 ? quantityHTML : ''}
+        ${data.stock < 5 ? quantityHTML : ''}
       </div>
 
       <div class="product-spacer"></div>

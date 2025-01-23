@@ -1,7 +1,8 @@
 import { 
   getProductData,
-  updateCartCount,
-  updateLocalStorage,
+  groupCartItems,
+  updateCartQuantity,
+  updateCartState,
 } from "./utils.js";
 import { 
   ATTRIBUTE_DATA_CONTROL,
@@ -23,15 +24,15 @@ export const onClick = (eventTarget) => {
 function handleAddToCartEvent(target) {
   const productID = target.dataset.productId;
   const currentProduct = getProductData(productID);
-  const currentLocalData = updateLocalStorage();
+  const currentCartState = updateCartState();
+  const newCartState = groupCartItems(currentCartState, currentProduct);
 
-  /**
-   * Need to group the product items by ID
-   * and calc quantity of each
-   * Then set updated data to localStorage
-   * \/ rewrite \/
-   */
-
-  updateLocalStorage([currentProduct, ...currentLocalData]);
-  updateCartCount();
+  updateCartState(newCartState);
+  updateCartQuantity(newCartState);
 }
+
+/**
+ * Need to update GlobalState on every ProductEvent
+ * Update "stock count" when add product to cart
+ * Update card "left count"
+ */
