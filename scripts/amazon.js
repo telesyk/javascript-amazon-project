@@ -3,14 +3,14 @@ import { onClick } from "./actions.js";
 import { ATTRIBUTE_DATA_CONTROL } from "./constants.js";
 import { 
   updateCartQuantity,
-  updateGlobalState,
+  updateGeneralState,
   updateCartState,
 } from "./utils.js";
 
-const currentGlobalState = updateGlobalState();
+const currentGeneralState = updateGeneralState();
 const currentCartState = updateCartState();
 
-renderProducts(currentGlobalState);
+renderProducts(currentGeneralState);
 updateCartQuantity(currentCartState);
 
 document.addEventListener('click', (event) => {

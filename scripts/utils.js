@@ -23,7 +23,7 @@ export function createIntArray(count) {
 /**
  * @param {Array} attrList array of object-list attributes for button
  */
-export function getStringAttributes(attrList) {
+export function convertAttrToString(attrList) {
   if (!(attrList instanceof Array)) return Error('"attrList" is not an Array.');
 
   let attrString = '';
@@ -41,12 +41,31 @@ export function getStringAttributes(attrList) {
  * 
  * @returns Object of current card details
  */
-export function getProductData(productID, productQuantity) {
-  const currentProduct = PRODUCTS.filter((product) => product.id === productID);
+export function getCurrentProductData(productID, productQuantity) {
+  const generalState = updateGeneralState();
+  const currentProduct = generalState.filter((product) => product.id === productID);
+
+  if (currentProduct[0].stock < 1) {
+    console.warn('New item NOT added');
+    return null;
+  } /* Temporal solution to ignore more items add */
+  
+  const newProductQuantity = !productQuantity ? 1 : productQuantity;
+  const newProductStock = currentProduct[0].stock - newProductQuantity;
+  const newGeneralState = generalState.map(item => {
+    if (item.id !== productID) return item;
+    return {
+      ...item,
+      stock: newProductStock,
+    }
+  });
+
+  updateGeneralState(newGeneralState);
 
   return {
-    quantity: !productQuantity ? 1 : productQuantity,
-    ...currentProduct[0]
+    ...currentProduct[0],
+    quantity: newProductQuantity,
+    stock: newProductStock,
   };
 }
 
@@ -81,7 +100,8 @@ export function updateCartQuantity(data) {
 }
 
 export function groupCartItems(cartList, newItem) {
-  if (!cartList || !newItem) return new Error('Invalid values');
+  if (!cartList) return Error('Invalid value');
+  if (!newItem) return cartList;
 
   const isExist = cartList.find(item => item.id === newItem.id);
   
@@ -104,7 +124,7 @@ export function groupCartItems(cartList, newItem) {
  * @param {Array} data set/get the global products list
  * @returns updated products list
  */
-export function updateGlobalState(data) {
+export function updateGeneralState(data) {
   const localState = localStorage.getItem(PRODUCTS_STORAGE_STATE_NAME);
 
   if (!data) {

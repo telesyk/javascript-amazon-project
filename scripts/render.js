@@ -1,4 +1,4 @@
-import { createIntArray, getStringAttributes } from "./utils.js";
+import { createIntArray, convertAttrToString } from "./utils.js";
 import { 
   EVENT_ADD_TO_CART,
   ATTRIBUTE_DATA_CONTROL,
@@ -31,7 +31,7 @@ export const renderSelectHTML = (stockCount) => {
 
 export const renderAddButton = (options) => {
   const buttonText = !options?.content ? 'Add to Cart' : options.content;
-  const attrString = !options.attr ? '' : getStringAttributes(options.attr);
+  const attrString = !options.attr ? '' : convertAttrToString(options.attr);
 
   return `
     <button 

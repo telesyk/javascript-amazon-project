@@ -1,5 +1,5 @@
 import { 
-  getProductData,
+  getCurrentProductData,
   groupCartItems,
   updateCartQuantity,
   updateCartState,
@@ -23,7 +23,7 @@ export const onClick = (eventTarget) => {
 
 function handleAddToCartEvent(target) {
   const productID = target.dataset.productId;
-  const currentProduct = getProductData(productID);
+  const currentProduct = getCurrentProductData(productID);
   const currentCartState = updateCartState();
   const newCartState = groupCartItems(currentCartState, currentProduct);
 
@@ -32,7 +32,5 @@ function handleAddToCartEvent(target) {
 }
 
 /**
- * Need to update GlobalState on every ProductEvent
- * Update "stock count" when add product to cart
- * Update card "left count"
+ * Update card left items count
  */
