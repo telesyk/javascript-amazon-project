@@ -2,8 +2,11 @@ import { PRODUCTS } from "../data/products.js";
 import { 
   PRODUCTS_STORAGE_NAME,
   PRODUCTS_STORAGE_STATE_NAME,
-  SELECTOR_CART_QUANTITY
+  SELECTOR_CART_QUANTITY,
+  SELECTOR_CART_ADDED_MESSAGE,
+  SELECTOR_IS_VISIBLE
 } from "./constants.js";
+
 /**
  * 
  * @param {Number} count integer number
@@ -144,4 +147,16 @@ export function updateGeneralState(data) {
   }
 
   localStorage.setItem(PRODUCTS_STORAGE_STATE_NAME, JSON.stringify(data));
+}
+
+export function updateAddedMessage(targetButton) {
+  const addedMessageElement = targetButton.parentElement.querySelector(SELECTOR_CART_ADDED_MESSAGE);
+
+  addedMessageElement.classList.add(SELECTOR_IS_VISIBLE);
+
+  const timer = setTimeout(() => {
+    addedMessageElement.classList.remove(SELECTOR_IS_VISIBLE);
+    clearTimeout(timer);
+    /* Need to review & refactor */
+  }, 2000);
 }
