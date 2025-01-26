@@ -4,6 +4,8 @@ import {
   ATTRIBUTE_DATA_CONTROL,
   ATTRIBUTE_DATA_PRODUCT_ID,
   SELECTOR_PRODUCT_GRID,
+  EVENT_SET_ITEM_QUANTITY,
+  ATTRIBUTE_DATA_PRODUCT_QUANTITY,
 } from "./constants.js";
 
 export const renderQuantityStringHTML = (quantity) => {
@@ -18,7 +20,7 @@ export const renderSelectHTML = (stockCount) => {
   const optionsList = createIntArray(stockCount);
 
   return `
-    <select>
+    <select ${ATTRIBUTE_DATA_CONTROL}=${EVENT_SET_ITEM_QUANTITY}>
       ${optionsList.map((item, index) => {
         if (index === 0) {
           return `<option selected value="${item}">${item}</option>`;
@@ -48,7 +50,7 @@ export const renderProductCard = (data) => {
   const isCardActive = data.stock > 0;
   const productRateImgName = data.rating.stars * 10;
   const productPrice = (data.priceCents / 100).toFixed(2);
-  const quantityHTML = renderQuantityStringHTML(data.stock);
+  const quantityLeftHTML = renderQuantityStringHTML(data.stock);
   const selectHTML = renderSelectHTML(data.stock);
   const selectContent = data.stock === 0 ? 'No items left' :
                         data.stock === 1 ? data.stock :
@@ -58,6 +60,7 @@ export const renderProductCard = (data) => {
       'aria-disabled': 'false',
       [ATTRIBUTE_DATA_CONTROL]: EVENT_ADD_TO_CART,
       [ATTRIBUTE_DATA_PRODUCT_ID]: data.id,
+      [ATTRIBUTE_DATA_PRODUCT_QUANTITY]: data.quantity || 1,
     }],
   };
   const buttonHTML = renderAddButton(btnOptions);
@@ -80,7 +83,7 @@ export const renderProductCard = (data) => {
 
       <div class="product-quantity-container">
         ${selectContent}
-        ${data.stock < 5 ? quantityHTML : ''}
+        ${data.stock < 5 ? quantityLeftHTML : ''}
       </div>
 
       <div class="product-spacer"></div>
