@@ -5,3 +5,4 @@ export const SELECTOR_CART_QUANTITY = '.cart-quantity';
 export const PRODUCTS_STORAGE_NAME = 'cardProductsList';
 export const PRODUCTS_STORAGE_STATE_NAME = 'productsState';
 export const EVENT_ADD_TO_CART = 'add-to-cart';
+export const EVENT_SET_ITEM_QUANTITY = 'set-item-quantity';

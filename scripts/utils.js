@@ -52,6 +52,12 @@ export function getCurrentProductData(productID, productQuantity) {
   
   const newProductQuantity = !productQuantity ? 1 : productQuantity;
   const newProductStock = currentProduct[0].stock - newProductQuantity;
+
+  if (newProductStock < 0) { // WHEN at one momemnt add MORE then stock HAS
+    console.warn('Could NOT add more then in stock');
+    return null;
+  } /* Temporal solution to ignore more items add */
+
   const newGeneralState = generalState.map(item => {
     if (item.id !== productID) return item;
     return {
@@ -113,6 +119,7 @@ export function groupCartItems(cartList, newItem) {
     return {
       ...item,
       quantity: item.quantity + newItem.quantity,
+      stock: newItem.stock,
     }
   });
 
