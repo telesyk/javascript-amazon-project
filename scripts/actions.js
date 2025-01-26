@@ -7,7 +7,9 @@ import {
 import { 
   ATTRIBUTE_DATA_CONTROL,
   EVENT_ADD_TO_CART,
-  EVENT_SET_ITEM_QUANTITY
+  EVENT_SET_ITEM_QUANTITY,
+  SELECTOR_CART_ADDED_MESSAGE,
+  SELECTOR_IS_VISIBLE
 } from "./constants.js";
 
 export const onClick = (eventTarget) => {
@@ -40,14 +42,20 @@ function handleAddToCartEvent(target) {
   const currentProduct = getCurrentProductData(productID, productQuantity);
   const currentCartState = updateCartState();
   const newCartState = groupCartItems(currentCartState, currentProduct);
+  const addedMessageElement = target.parentElement.querySelector(SELECTOR_CART_ADDED_MESSAGE);
 
   updateCartState(newCartState);
   updateCartQuantity(newCartState);
+  
+  !currentProduct ? 
+    addedMessageElement.classList.remove(SELECTOR_IS_VISIBLE) : 
+    addedMessageElement.classList.add(SELECTOR_IS_VISIBLE);
 }
 
 function handleChangeQuantity(target) {
   const cardContainerElement = target.closest('.product-container');
-  const addButtonElement = cardContainerElement.querySelector(`[${ATTRIBUTE_DATA_CONTROL}=${EVENT_ADD_TO_CART}]`);
+  const buttonSelector = `[${ATTRIBUTE_DATA_CONTROL}=${EVENT_ADD_TO_CART}]`;
+  const addButtonElement = cardContainerElement.querySelector(buttonSelector);
   
   addButtonElement.dataset.productQuantity = target.value;
 }

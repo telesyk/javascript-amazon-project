@@ -88,7 +88,7 @@ export const renderProductCard = (data) => {
 
       <div class="product-spacer"></div>
 
-      <div class="added-to-cart">
+      <div class="added-to-cart js-added-message">
         <img src="images/icons/checkmark.png">
         Added
       </div>
