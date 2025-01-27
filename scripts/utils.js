@@ -150,13 +150,14 @@ export function updateGeneralState(data) {
 }
 
 export function updateAddedMessage(targetButton) {
-  const addedMessageElement = targetButton.parentElement.querySelector(SELECTOR_CART_ADDED_MESSAGE);
+  let prevTimeoutId; // initial previous timeoutId
+  const messageElement = targetButton.parentElement.querySelector(SELECTOR_CART_ADDED_MESSAGE);
+  
+  messageElement.classList.add(SELECTOR_IS_VISIBLE);
 
-  addedMessageElement.classList.add(SELECTOR_IS_VISIBLE);
+  if (prevTimeoutId) clearTimeout(prevTimeoutId); // clear previous timeoutId if exist
 
-  const timer = setTimeout(() => {
-    addedMessageElement.classList.remove(SELECTOR_IS_VISIBLE);
-    clearTimeout(timer);
-    /* Need to review & refactor */
-  }, 2000);
+  const timeoutId = setTimeout(() => messageElement.classList.remove(SELECTOR_IS_VISIBLE), 2500); // if previous timeoutId not exist create new one and remove css-class
+
+  prevTimeoutId = timeoutId; // write new timeoutId
 }
