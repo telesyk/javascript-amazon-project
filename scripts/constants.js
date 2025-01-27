@@ -1,0 +1,11 @@
+export const ATTRIBUTE_DATA_CONTROL = 'data-control';
+export const ATTRIBUTE_DATA_PRODUCT_ID = 'data-product-id';
+export const ATTRIBUTE_DATA_PRODUCT_QUANTITY = 'data-product-quantity';
+export const SELECTOR_PRODUCT_GRID = '#jsProductsGrid';
+export const SELECTOR_CART_QUANTITY = '.cart-quantity';
+export const SELECTOR_CART_ADDED_MESSAGE = '.js-added-message';
+export const SELECTOR_IS_VISIBLE = 'is-visible';
+export const PRODUCTS_STORAGE_NAME = 'cardProductsList';
+export const PRODUCTS_STORAGE_STATE_NAME = 'productsState';
+export const EVENT_ADD_TO_CART = 'add-to-cart';
+export const EVENT_SET_ITEM_QUANTITY = 'set-item-quantity';

@@ -1,3 +1,14 @@
+:root {
+  --yellow-1: rgb(255, 216, 20);
+  --yellow-2: rgb(252, 210, 0);
+  /*--*/
+  --box-shadow-color: rgba(213, 217, 217, 0.5);
+  --btn-background: rgb(164, 167, 167);
+  --btn-text-color: rgb(33, 33, 33);
+  --btn-border-color: rgb(122, 121, 121);
+  --control-border-radius: 8px;
+}
+
 body {
   font-family: Roboto, Arial;
   color: rgb(33, 33, 33);
@@ -14,6 +25,41 @@ p {
 
 button {
   cursor: pointer;
+  color: var(--btn-text-color);
+  background-color: var(--btn-background);
+  border-radius: var(--control-border-radius);
+  border: 1px solid var(--btn-border-color);
+  box-shadow: 0 2px 5px var(--box-shadow-color);
+
+  &.button-primary {
+    --btn-background: var(--yellow-1);
+    --btn-border-color: var(--yellow-2);
+
+    &:hover {
+      --btn-background: rgb(247, 202, 0);
+      --btn-border-color: rgb(242, 194, 0);
+    }
+
+    &:active {
+      --btn-background: rgb(255, 216, 20);
+      --btn-border-color: rgb(252, 210, 0);
+      box-shadow: none;
+    }
+  }
+
+  &.button-secondary {
+    --btn-background: white;
+    --btn-border-color: rgb(213, 217, 217);
+
+    &:hover {
+      --btn-background: rgb(247, 250, 250);
+    }
+
+    &:active {
+      --btn-background: rgb(237, 253, 255);
+      box-shadow: none;
+    }
+  }
 }
 
 select {
@@ -22,44 +68,9 @@ select {
 
 input, select, button {
   font-family: Roboto, Arial;
-}
-
-.button-primary {
-  color: rgb(33, 33, 33);
-  background-color: rgb(255, 216, 20);
-  border: 1px solid rgb(252, 210, 0);
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
-}
-
-.button-primary:hover {
-  background-color: rgb(247, 202, 0);
-  border: 1px solid rgb(242, 194, 0);
-}
-
-.button-primary:active {
-  background: rgb(255, 216, 20);
-  border-color: rgb(252, 210, 0);
-  box-shadow: none;
-}
-
-.button-secondary {
-  color: rgb(33, 33, 33);
-  background: white;
-  border: 1px solid rgb(213, 217, 217);
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
-}
-
-.button-secondary:hover {
-  background-color: rgb(247, 250, 250);
-}
-
-.button-secondary:active {
-  background-color: rgb(237, 253, 255);
-  box-shadow: none;
+  &:focus-visible {
+    outline: unset;
+  }
 }
 
 /* These styles will limit text to 2 lines. Anything
@@ -88,11 +99,11 @@ select {
   color: rgb(33, 33, 33);
   background-color: rgb(240, 240, 240);
   border: 1px solid rgb(213, 217, 217);
-  border-radius: 8px;
+  border-radius: var(--control-border-radius);
   padding: 3px 5px;
   font-size: 15px;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+  box-shadow: 0 2px 5px var(--box-shadow-color);
 }
 
 select:focus,

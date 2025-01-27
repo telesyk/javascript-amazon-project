@@ -123,7 +123,16 @@
 }
 
 .product-quantity-container {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 17px;
+}
+
+.product-quantity-left {
+  color: rgb(196, 80, 0);
+  font-size: 0.875em;
 }
 
 .product-spacer {
@@ -142,6 +151,9 @@
      be invisible. Use JavaScript to change the
      opacity and make it visible. */
   opacity: 0;
+}
+.added-to-cart.is-visible {
+  opacity: 1;
 }
 
 .added-to-cart img {
