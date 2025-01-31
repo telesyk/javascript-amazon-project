@@ -149,9 +149,9 @@ export function updateGeneralState(data) {
   localStorage.setItem(PRODUCTS_STORAGE_STATE_NAME, JSON.stringify(data));
 }
 
-export function updateAddedMessage(targetButton) {
+export function updateAddedMessage(cardContainer) {
   let prevTimeoutId; // initial previous timeoutId
-  const messageElement = targetButton.parentElement.querySelector(SELECTOR_CART_ADDED_MESSAGE);
+  const messageElement = cardContainer.querySelector(SELECTOR_CART_ADDED_MESSAGE);
   
   messageElement.classList.add(SELECTOR_IS_VISIBLE);
 
@@ -159,5 +159,5 @@ export function updateAddedMessage(targetButton) {
 
   const timeoutId = setTimeout(() => messageElement.classList.remove(SELECTOR_IS_VISIBLE), 2500); // if previous timeoutId not exist create new one and remove css-class
 
-  prevTimeoutId = timeoutId; // write new timeoutId
+  prevTimeoutId = timeoutId; // save new timeoutId
 }
