@@ -27,7 +27,7 @@ export function createIntArray(count) {
  * @param {Array} attrList array of object-list attributes for button
  */
 export function convertAttrToString(attrList) {
-  if (!(attrList instanceof Array)) return;
+  if (!attrList || !(attrList instanceof Array)) return;
 
   let attrString = '';
 
@@ -166,4 +166,8 @@ export function updateAddedMessage(cardContainer) {
   const timeoutId = setTimeout(() => messageElement.classList.remove(SELECTOR_IS_VISIBLE), 2500); // if previous timeoutId not exist create new one and remove css-class
 
   prevTimeoutId = timeoutId; // save new timeoutId
+}
+
+export function convertCentToDollar(cents) {
+  return (cents / 100).toFixed(2);
 }

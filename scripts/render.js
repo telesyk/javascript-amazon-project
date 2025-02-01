@@ -1,4 +1,9 @@
-import { createIntArray, convertAttrToString, updateCartState, getItemsQuantity } from "./utils.js";
+import { 
+  createIntArray,
+  convertAttrToString,
+  getItemsQuantity,
+  convertCentToDollar
+} from "./utils.js";
 import { 
   EVENT_ADD_TO_CART,
   ATTRIBUTE_DATA_CONTROL,
@@ -9,14 +14,15 @@ import {
   SELECTOR_CHECKOUT_HEADER_ITEMS,
   SELECTOR_CHECKOUT_LIST,
 } from "./constants.js";
+import { deliveryOptions } from "../data/delivery-options.js";
 
-export function renderQuantityStringHTML(quantity) {
+function renderQuantityStringHTML(quantity) {
   if (!quantity) return '';
 
   return `<div class="product-quantity-left">Only <b>${quantity}</b> left</div>`;
 }
 
-export function renderSelectHTML(data) {
+function renderSelectHTML(data) {
   if (!data || !data.stock || !data.id) return '';
 
   const optionsList = createIntArray(data.stock);
@@ -36,7 +42,7 @@ export function renderSelectHTML(data) {
   `;
 }
 
-export function renderAddButtonHTML(options) {
+function renderAddButtonHTML(options) {
   const buttonText = !options?.content ? 'Add to Cart' : options.content;
   const attrString = !options.attr ? '' : convertAttrToString(options.attr);
 
@@ -49,7 +55,7 @@ export function renderAddButtonHTML(options) {
   `;
 }
 
-export function renderProductCard(data) {
+function renderProductCard(data) {
   if (!data) return;
 
   const {
@@ -61,14 +67,6 @@ export function renderProductCard(data) {
     name,
     rating
   } = data;
-  const isCardActive = stock > 0;
-  const productRateImgName = rating.stars * 10;
-  const productPrice = (priceCents / 100).toFixed(2);
-  const quantityLeftHTML = renderQuantityStringHTML(stock);
-  const selectHTML = renderSelectHTML({stock, id});
-  const selectContent = stock === 0 ? 'No items left' :
-                        stock === 1 ? stock :
-                        selectHTML;
   const btnOptions = {
     attr: [{
       'aria-disabled': 'false',
@@ -77,7 +75,15 @@ export function renderProductCard(data) {
       [ATTRIBUTE_DATA_PRODUCT_QUANTITY]: quantity || 1,
     }],
   };
+  const isCardActive = stock > 0;
+  const productRateImgName = rating.stars * 10;
+  const dollarPrice = convertCentToDollar(priceCents);
   const buttonHTML = renderAddButtonHTML(btnOptions);
+  const quantityLeftHTML = renderQuantityStringHTML(stock);
+  const selectHTML = renderSelectHTML({stock, id});
+  const selectContent = stock === 0 ? 'No items left' :
+                        stock === 1 ? stock :
+                        selectHTML;
   const htmlTemplate = `
     <div class="product-container" id="${id}">
       <div class="product-image-container">
@@ -92,7 +98,7 @@ export function renderProductCard(data) {
         <div class="product-rating-count link-primary">${rating.count}</div>
       </div>
 
-      <div class="product-price">$${productPrice}</div>
+      <div class="product-price">$${dollarPrice}</div>
 
       <div class="product-quantity-container">
         ${selectContent}
@@ -129,7 +135,7 @@ export function renderProducts(productsList) {
   productsElement.append(productsFragment);
 }
 
-function renderCheckoutHeaderItems(quantity) {
+function renderCheckoutHeaderItemsHTML(quantity) {
   if (!quantity) return;
 
   const text = quantity !== 1 ? 'items' : 'item';
@@ -138,6 +144,35 @@ function renderCheckoutHeaderItems(quantity) {
     Checkout (<a class="return-to-home-link" href="amazon.html">
       ${quantity} ${text}
     </a>)
+  `;
+}
+
+function renderDeliveryOptionHTML(data) {
+  if (!data) return;
+
+  const {
+    index,
+    deliveryDate,
+    deliveryName,
+    attributes,
+    isChecked,
+  } = data;
+  const attrString = convertAttrToString(attributes);
+
+  return `
+    <label class="delivery-option">
+      <input 
+        class="delivery-option-input"
+        name="delivery-option-${index}"
+        type="radio"
+        ${!attributes ? '' : attrString}
+        ${!isChecked ? '' : 'checked'} 
+      />
+      <div>
+        <div class="delivery-option-date">${deliveryDate}</div>
+        <div class="delivery-option-price">${deliveryName}</div>
+      </div>
+    </label>
   `;
 }
 
@@ -150,8 +185,13 @@ function renderCheckoutItem(data) {
     quantity,
     image,
     name,
+    index,
   } = data;
-  const productPrice = (priceCents / 100).toFixed(2);
+  const dollarPrice = convertCentToDollar(priceCents);
+  const deliveryOptionsHTML = deliveryOptions.reduce((html, option) => {
+    const optionHTML = renderDeliveryOptionHTML({...option, index});
+    return html + optionHTML;
+  }, '');
   const template = `
     <div class="cart-item-container" id="${id}">
       <div class="delivery-date">
@@ -159,12 +199,10 @@ function renderCheckoutItem(data) {
       </div>
 
       <div class="cart-item-details-grid">
-        <img class="product-image"
-          src="${image}">
-
+        <img class="product-image" src="${image}" />
         <div class="cart-item-details">
           <div class="product-name">${name}</div>
-          <div class="product-price">${productPrice}</div>
+          <div class="product-price">$${dollarPrice}</div>
           <div class="product-quantity">
             <span>
               Quantity: <span class="quantity-label">${quantity}</span>
@@ -182,45 +220,7 @@ function renderCheckoutItem(data) {
           <div class="delivery-options-title">
             Choose a delivery option:
           </div>
-          <div class="delivery-option">
-            <input type="radio" checked
-              class="delivery-option-input"
-              name="delivery-option-1">
-            <div>
-              <div class="delivery-option-date">
-                Tuesday, June 21
-              </div>
-              <div class="delivery-option-price">
-                FREE Shipping
-              </div>
-            </div>
-          </div>
-          <div class="delivery-option">
-            <input type="radio"
-              class="delivery-option-input"
-              name="delivery-option-1">
-            <div>
-              <div class="delivery-option-date">
-                Wednesday, June 15
-              </div>
-              <div class="delivery-option-price">
-                $4.99 - Shipping
-              </div>
-            </div>
-          </div>
-          <div class="delivery-option">
-            <input type="radio"
-              class="delivery-option-input"
-              name="delivery-option-1">
-            <div>
-              <div class="delivery-option-date">
-                Monday, June 13
-              </div>
-              <div class="delivery-option-price">
-                $9.99 - Shipping
-              </div>
-            </div>
-          </div>
+          ${deliveryOptionsHTML}
         </div>
       </div>
     </div>
@@ -237,11 +237,11 @@ export function renderCheckout(cartProducts) {
   const cartItemsQuantity = getItemsQuantity(cartProducts);
   const headerItemsElement = document.querySelector(SELECTOR_CHECKOUT_HEADER_ITEMS);
   const checkoutOrderListElement = document.querySelector(SELECTOR_CHECKOUT_LIST);
-  const headerItemsHTML = renderCheckoutHeaderItems(cartItemsQuantity);
+  const headerItemsHTML = renderCheckoutHeaderItemsHTML(cartItemsQuantity);
   const fragmentElement = document.createDocumentFragment();
 
-  cartProducts.forEach(product => {
-    const checkoutItemElement = renderCheckoutItem(product);
+  cartProducts.forEach((product, index) => {
+    const checkoutItemElement = renderCheckoutItem({...product, index});
   
     fragmentElement.append(checkoutItemElement);
   });
