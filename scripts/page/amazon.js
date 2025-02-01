@@ -1,11 +1,11 @@
-import { renderProducts } from "./render.js";
-import { onChange, onClick } from "./actions.js";
-import { ATTRIBUTE_DATA_CONTROL } from "./constants.js";
+import { renderProducts } from "../render.js";
+import { onChange, onClick } from "../actions.js";
+import { ATTRIBUTE_DATA_CONTROL } from "../constants.js";
 import { 
   updateCartQuantity,
   updateGeneralState,
   updateCartState,
-} from "./utils.js";
+} from "../utils.js";
 
 const currentGeneralState = updateGeneralState();
 const currentCartState = updateCartState();

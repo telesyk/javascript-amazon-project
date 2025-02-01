@@ -1,4 +1,4 @@
-import { createIntArray, convertAttrToString } from "./utils.js";
+import { createIntArray, convertAttrToString, updateCartState, getItemsQuantity } from "./utils.js";
 import { 
   EVENT_ADD_TO_CART,
   ATTRIBUTE_DATA_CONTROL,
@@ -6,15 +6,16 @@ import {
   SELECTOR_PRODUCT_GRID,
   EVENT_SET_ITEM_QUANTITY,
   ATTRIBUTE_DATA_PRODUCT_QUANTITY,
+  SELECTOR_CHECKOUT_HEADER_ITEMS,
 } from "./constants.js";
 
-export const renderQuantityStringHTML = (quantity) => {
+export function renderQuantityStringHTML(quantity) {
   if (!quantity) return '';
 
   return `<div class="product-quantity-left">Only <b>${quantity}</b> left</div>`;
-};
+}
 
-export const renderSelectHTML = (data) => {
+export function renderSelectHTML(data) {
   if (!data || !data.stock || !data.id) return '';
 
   const optionsList = createIntArray(data.stock);
@@ -32,9 +33,9 @@ export const renderSelectHTML = (data) => {
       })}
     </select>
   `;
-};
+}
 
-export const renderAddButtonHTML = (options) => {
+export function renderAddButtonHTML(options) {
   const buttonText = !options?.content ? 'Add to Cart' : options.content;
   const attrString = !options.attr ? '' : convertAttrToString(options.attr);
 
@@ -45,9 +46,9 @@ export const renderAddButtonHTML = (options) => {
       ${buttonText}
     </button>
   `;
-};
+}
 
-export const renderProductCard = (data) => {
+export function renderProductCard(data) {
   if (!data) return;
 
   const {
@@ -110,9 +111,9 @@ export const renderProductCard = (data) => {
   const element = parser.parseFromString(htmlTemplate, 'text/html');
 
   return element.body.firstChild;
-};
+}
 
-export const renderProducts = (productsList) => {
+export function renderProducts(productsList) {
   if (!productsList) return;
 
   const productsElement = document.querySelector(SELECTOR_PRODUCT_GRID);
@@ -125,4 +126,26 @@ export const renderProducts = (productsList) => {
   });
   
   productsElement.append(productsFragment);
-};
+}
+
+export function renderCheckoutHeaderItems(quantity) {
+  if (!quantity) return;
+
+  const text = quantity !== 1 ? 'items' : 'item';
+
+  return `
+    Checkout (<a class="return-to-home-link" href="amazon.html">
+      ${quantity} ${text}
+    </a>)
+  `;
+}
+
+export function renderCheckout(data) {
+  if (!data) return;
+
+  const cartItemsQuantity = getItemsQuantity(data);
+  const headerItemsElement = document.querySelector(SELECTOR_CHECKOUT_HEADER_ITEMS);
+  const headerItemsHTML = renderCheckoutHeaderItems(cartItemsQuantity);
+  
+  headerItemsElement.innerHTML = headerItemsHTML;
+}

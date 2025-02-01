@@ -13,7 +13,7 @@ import {
  * @returns an Array of numbers from 0 to ${count}
  */
 export function createIntArray(count) {
-  if (!count) return Error('Func "createIntArray" get uncorrect value "count"');
+  if (!count) return;
   let newArr = [];
 
   for (let i = 0; i < count; i++) {
@@ -27,7 +27,7 @@ export function createIntArray(count) {
  * @param {Array} attrList array of object-list attributes for button
  */
 export function convertAttrToString(attrList) {
-  if (!(attrList instanceof Array)) return Error('"attrList" is not an Array.');
+  if (!(attrList instanceof Array)) return;
 
   let attrString = '';
 
@@ -96,16 +96,22 @@ export function updateCartState(data) {
 }
 
 export function updateCartQuantity(data) {
-  if (!data || !(data instanceof Array)) return new Error('Invalid value of "data"');
+  if (!data || !(data instanceof Array)) return;
   
-  let quantity = 0;
+  const quantity = getItemsQuantity(data);
   const cartQuantityElement = document.querySelector(SELECTOR_CART_QUANTITY);
-
-  data.map(item => {
-    quantity += item.quantity || 0;
-  });
   
   cartQuantityElement.innerHTML = quantity;
+}
+
+export function getItemsQuantity(data) {
+  if (!data || !(data instanceof Array)) return;
+
+  let quantity = 0;
+
+  data.map(item => quantity += item.quantity || 0);
+  
+  return quantity;
 }
 
 export function groupCartItems(cartList, newItem) {
