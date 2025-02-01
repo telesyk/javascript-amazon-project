@@ -6,6 +6,7 @@ export const SELECTOR_CART_QUANTITY = '.cart-quantity';
 export const SELECTOR_CART_ADDED_MESSAGE = '.js-added-message';
 export const SELECTOR_IS_VISIBLE = 'is-visible';
 export const SELECTOR_CHECKOUT_HEADER_ITEMS = '.js-checkout-header-items';
+export const SELECTOR_CHECKOUT_LIST = '.js-checkout-list';
 export const PRODUCTS_STORAGE_NAME = 'cardProductsList';
 export const PRODUCTS_STORAGE_STATE_NAME = 'productsState';
 export const EVENT_ADD_TO_CART = 'add-to-cart';

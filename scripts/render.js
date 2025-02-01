@@ -7,6 +7,7 @@ import {
   EVENT_SET_ITEM_QUANTITY,
   ATTRIBUTE_DATA_PRODUCT_QUANTITY,
   SELECTOR_CHECKOUT_HEADER_ITEMS,
+  SELECTOR_CHECKOUT_LIST,
 } from "./constants.js";
 
 export function renderQuantityStringHTML(quantity) {
@@ -119,16 +120,16 @@ export function renderProducts(productsList) {
   const productsElement = document.querySelector(SELECTOR_PRODUCT_GRID);
   const productsFragment = new DocumentFragment();
   
-  productsList.forEach(cardData => {
-    const productCardElement = renderProductCard(cardData);
+  productsList.forEach(product => {
+    const productElement = renderProductCard(product);
   
-    productsFragment.append(productCardElement);
+    productsFragment.append(productElement);
   });
   
   productsElement.append(productsFragment);
 }
 
-export function renderCheckoutHeaderItems(quantity) {
+function renderCheckoutHeaderItems(quantity) {
   if (!quantity) return;
 
   const text = quantity !== 1 ? 'items' : 'item';
@@ -140,12 +141,111 @@ export function renderCheckoutHeaderItems(quantity) {
   `;
 }
 
-export function renderCheckout(data) {
+function renderCheckoutItem(data) {
   if (!data) return;
 
-  const cartItemsQuantity = getItemsQuantity(data);
+  const {
+    id,
+    priceCents,
+    quantity,
+    image,
+    name,
+  } = data;
+  const productPrice = (priceCents / 100).toFixed(2);
+  const template = `
+    <div class="cart-item-container" id="${id}">
+      <div class="delivery-date">
+        Delivery date: Tuesday, June 21
+      </div>
+
+      <div class="cart-item-details-grid">
+        <img class="product-image"
+          src="${image}">
+
+        <div class="cart-item-details">
+          <div class="product-name">${name}</div>
+          <div class="product-price">${productPrice}</div>
+          <div class="product-quantity">
+            <span>
+              Quantity: <span class="quantity-label">${quantity}</span>
+            </span>
+            <span class="update-quantity-link link-primary">
+              Update
+            </span>
+            <span class="delete-quantity-link link-primary">
+              Delete
+            </span>
+          </div>
+        </div>
+
+        <div class="delivery-options">
+          <div class="delivery-options-title">
+            Choose a delivery option:
+          </div>
+          <div class="delivery-option">
+            <input type="radio" checked
+              class="delivery-option-input"
+              name="delivery-option-1">
+            <div>
+              <div class="delivery-option-date">
+                Tuesday, June 21
+              </div>
+              <div class="delivery-option-price">
+                FREE Shipping
+              </div>
+            </div>
+          </div>
+          <div class="delivery-option">
+            <input type="radio"
+              class="delivery-option-input"
+              name="delivery-option-1">
+            <div>
+              <div class="delivery-option-date">
+                Wednesday, June 15
+              </div>
+              <div class="delivery-option-price">
+                $4.99 - Shipping
+              </div>
+            </div>
+          </div>
+          <div class="delivery-option">
+            <input type="radio"
+              class="delivery-option-input"
+              name="delivery-option-1">
+            <div>
+              <div class="delivery-option-date">
+                Monday, June 13
+              </div>
+              <div class="delivery-option-price">
+                $9.99 - Shipping
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  const parser = new DOMParser();
+  const element = parser.parseFromString(template, 'text/html');
+
+  return element.body.firstChild;
+}
+
+export function renderCheckout(cartProducts) {
+  if (!cartProducts) return;
+
+  const cartItemsQuantity = getItemsQuantity(cartProducts);
   const headerItemsElement = document.querySelector(SELECTOR_CHECKOUT_HEADER_ITEMS);
+  const checkoutOrderListElement = document.querySelector(SELECTOR_CHECKOUT_LIST);
   const headerItemsHTML = renderCheckoutHeaderItems(cartItemsQuantity);
+  const fragmentElement = document.createDocumentFragment();
+
+  cartProducts.forEach(product => {
+    const checkoutItemElement = renderCheckoutItem(product);
   
+    fragmentElement.append(checkoutItemElement);
+  });
+
   headerItemsElement.innerHTML = headerItemsHTML;
+  checkoutOrderListElement.append(fragmentElement);
 }
