@@ -1,6 +1,7 @@
 export const ATTRIBUTE_DATA_CONTROL = 'data-control';
 export const ATTRIBUTE_DATA_PRODUCT_ID = 'data-product-id';
 export const ATTRIBUTE_DATA_PRODUCT_QUANTITY = 'data-product-quantity';
+export const ATTRIBUTE_DELIVERY_DATE = 'data-delivery-date';
 export const SELECTOR_PRODUCT_GRID = '#jsProductsGrid';
 export const SELECTOR_CART_QUANTITY = '.cart-quantity';
 export const SELECTOR_CART_ADDED_MESSAGE = '.js-added-message';

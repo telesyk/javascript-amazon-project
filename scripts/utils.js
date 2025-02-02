@@ -171,3 +171,26 @@ export function updateAddedMessage(cardContainer) {
 export function convertCentToDollar(cents) {
   return (cents / 100).toFixed(2);
 }
+
+export function getNextDate(days) {
+  const daysMS = days * 86400000; // 1 day = 86400000 ms
+  const currentDateMS = Date.parse(new Date());
+
+  return new Date(currentDateMS + daysMS);
+}
+
+export function getFormatedDateString(date) {
+  const dateFormat = [
+    'en-GB',
+    {
+      month: 'long',
+      weekday: 'long',
+      day: 'numeric',
+    }
+  ];
+  
+  const dateString = date.toLocaleDateString(...dateFormat);
+  const weekDayNComma = dateString.split(' ')[0] + ',';
+
+  return weekDayNComma + dateString.substring(weekDayNComma.length - 1);
+}

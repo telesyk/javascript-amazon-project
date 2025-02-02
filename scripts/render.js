@@ -2,7 +2,9 @@ import {
   createIntArray,
   convertAttrToString,
   getItemsQuantity,
-  convertCentToDollar
+  convertCentToDollar,
+  getNextDate,
+  getFormatedDateString
 } from "./utils.js";
 import { 
   EVENT_ADD_TO_CART,
@@ -13,6 +15,7 @@ import {
   ATTRIBUTE_DATA_PRODUCT_QUANTITY,
   SELECTOR_CHECKOUT_HEADER_ITEMS,
   SELECTOR_CHECKOUT_LIST,
+  ATTRIBUTE_DELIVERY_DATE,
 } from "./constants.js";
 import { deliveryOptions } from "../data/delivery-options.js";
 
@@ -152,12 +155,12 @@ function renderDeliveryOptionHTML(data) {
 
   const {
     index,
-    deliveryDate,
-    deliveryName,
-    attributes,
+    price,
+    dateValue,
     isChecked,
   } = data;
-  const attrString = convertAttrToString(attributes);
+  const deliveryDateString = getFormatedDateString( getNextDate(dateValue) );
+  const attributeDeliveryDate = `${ATTRIBUTE_DELIVERY_DATE}="${deliveryDateString}"`;
 
   return `
     <label class="delivery-option">
@@ -165,12 +168,12 @@ function renderDeliveryOptionHTML(data) {
         class="delivery-option-input"
         name="delivery-option-${index}"
         type="radio"
-        ${!attributes ? '' : attrString}
+        ${!dateValue ? '' : attributeDeliveryDate}
         ${!isChecked ? '' : 'checked'} 
       />
       <div>
-        <div class="delivery-option-date">${deliveryDate}</div>
-        <div class="delivery-option-price">${deliveryName}</div>
+        <div class="delivery-option-date">Within ${dateValue} ${dateValue !== 1 ? 'days' : 'day'}</div>
+        <div class="delivery-option-price">${price}</div>
       </div>
     </label>
   `;
@@ -192,10 +195,12 @@ function renderCheckoutItem(data) {
     const optionHTML = renderDeliveryOptionHTML({...option, index});
     return html + optionHTML;
   }, '');
+  const deliveryOptionChecked = deliveryOptions.filter(option => option.isChecked)[0];
+  const deliveryDateString = getFormatedDateString( getNextDate(deliveryOptionChecked.dateValue) );
   const template = `
     <div class="cart-item-container" id="${id}">
       <div class="delivery-date">
-        Delivery date: Tuesday, June 21
+        Delivery date: ${deliveryDateString}
       </div>
 
       <div class="cart-item-details-grid">

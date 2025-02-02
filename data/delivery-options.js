@@ -1,26 +1,17 @@
 export const deliveryOptions = [
   {
-    deliveryName: 'FREE Shipping',
-    deliveryDate: 'Within 12 business days',
-    attributes: [
-      {'data-delivery-name': 'after 12 business days',}
-    ],
+    price: 'FREE Shipping',
+    dateValue: '10',
     isChecked: true,
   },
   {
-    deliveryName: '$4.99 - Shipping',
-    deliveryDate: 'Within 5 business days',
-    attributes: [
-      {'data-delivery-name': 'after 5 business days',}
-    ],
+    price: '$4.99 - Shipping',
+    dateValue: '5',
     isChecked: false,
   },
   {
-    deliveryName: '$9.99 - Shipping',
-    deliveryDate: 'Within 2 business days',
-    attributes: [
-      {'data-delivery-name': 'after 2 business days',}
-    ],
+    price: '$9.99 - Shipping',
+    dateValue: '2',
     isChecked: false,
   }
 ];
