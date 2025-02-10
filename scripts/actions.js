@@ -1,28 +1,36 @@
 import { 
   ATTRIBUTE_DATA_CONTROL,
   EVENT_ADD_TO_CART,
+  EVENT_CHANGE_DELIVERY_OPTION,
   EVENT_SET_ITEM_QUANTITY,
 } from "./constants.js";
-import { handleAddToCartEvent, handleChangeQuantity } from "./handlers.js";
+import { handleAddToCartEvent, handleChangeDeliveryOption, handleChangeQuantity } from "./handlers.js";
 
-export const onClick = (eventTarget) => {
-  const eventType = eventTarget.getAttribute(ATTRIBUTE_DATA_CONTROL);
+export const onClick = (event) => {
+  if (!event.target.hasAttribute(ATTRIBUTE_DATA_CONTROL)) return;
+
+  const eventType = event.target.getAttribute(ATTRIBUTE_DATA_CONTROL);
 
   switch(eventType) {
     case EVENT_ADD_TO_CART:
-      handleAddToCartEvent(eventTarget);
+      handleAddToCartEvent(event.target);
       return;
     default:
       return;
   }
 };
 
-export const onChange = (eventTarget) => {
-  const eventType = eventTarget.getAttribute(ATTRIBUTE_DATA_CONTROL);
+export const onChange = (event) => {
+  if (!event.target.hasAttribute(ATTRIBUTE_DATA_CONTROL)) return;
+
+  const eventType = event.target.getAttribute(ATTRIBUTE_DATA_CONTROL);
 
   switch(eventType) {
     case EVENT_SET_ITEM_QUANTITY:
-      handleChangeQuantity(eventTarget);
+      handleChangeQuantity(event.target);
+      return;
+    case EVENT_CHANGE_DELIVERY_OPTION:
+      handleChangeDeliveryOption(event.target);
       return;
     default:
       return;

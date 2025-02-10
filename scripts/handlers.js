@@ -9,6 +9,7 @@ import {
 import { 
   ATTRIBUTE_DATA_CONTROL,
   EVENT_ADD_TO_CART,
+  SELECTOR_CHECKOUT_DELIVERY_DATE,
 } from "./constants.js";
 
 export function handleAddToCartEvent(target) {
@@ -24,7 +25,8 @@ export function handleAddToCartEvent(target) {
 
   const newProductElement = renderProductCard(currentProductData);
   productElement.innerHTML = newProductElement.innerHTML;
-  !!currentProductData && updateAddedMessage(productElement); // display message/alert "Product added"
+
+  if (currentProductData) updateAddedMessage(productElement); // display message/alert "Product added"
 }
 
 export function handleChangeQuantity(target) {
@@ -35,6 +37,10 @@ export function handleChangeQuantity(target) {
   addButtonElement.dataset.productQuantity = target.value;
 }
 
-/**
- * Notes: check quantity-count (in button) after product was add to Cart
- */
+export function handleChangeDeliveryOption(target) {
+  const { deliveryDate } = target.dataset;
+  const parentContainer = target.closest('[id]'); // SHOULD be rewrited with more conventioned style
+  const cartDeliveryDateElement = parentContainer.querySelector(SELECTOR_CHECKOUT_DELIVERY_DATE);
+
+  cartDeliveryDateElement.innerHTML = deliveryDate;
+}

@@ -16,6 +16,7 @@ import {
   SELECTOR_CHECKOUT_HEADER_ITEMS,
   SELECTOR_CHECKOUT_LIST,
   ATTRIBUTE_DELIVERY_DATE,
+  EVENT_CHANGE_DELIVERY_OPTION,
 } from "./constants.js";
 import { deliveryOptions } from "../data/delivery-options.js";
 
@@ -58,7 +59,7 @@ function renderAddButtonHTML(options) {
   `;
 }
 
-function renderProductCard(data) {
+export function renderProductCard(data) {
   if (!data) return;
 
   const {
@@ -161,13 +162,15 @@ function renderDeliveryOptionHTML(data) {
   } = data;
   const deliveryDateString = getFormatedDateString( getNextDate(dateValue) );
   const attributeDeliveryDate = `${ATTRIBUTE_DELIVERY_DATE}="${deliveryDateString}"`;
+  const attributeDataControl = `${ATTRIBUTE_DATA_CONTROL}="${EVENT_CHANGE_DELIVERY_OPTION}"`;
 
   return `
     <label class="delivery-option">
       <input 
         class="delivery-option-input"
-        name="delivery-option-${index}"
         type="radio"
+        name="delivery-option-${index}"
+        ${attributeDataControl}
         ${!dateValue ? '' : attributeDeliveryDate}
         ${!isChecked ? '' : 'checked'} 
       />
@@ -200,7 +203,7 @@ function renderCheckoutItem(data) {
   const template = `
     <div class="cart-item-container" id="${id}">
       <div class="delivery-date">
-        Delivery date: ${deliveryDateString}
+        Delivery date: <span class="js-checkout-item-delivery-date">${deliveryDateString}</span>
       </div>
 
       <div class="cart-item-details-grid">
