@@ -9,6 +9,7 @@ export const SELECTOR_IS_VISIBLE = 'is-visible';
 export const SELECTOR_CHECKOUT_HEADER_ITEMS = '.js-checkout-header-items';
 export const SELECTOR_CHECKOUT_LIST = '.js-checkout-list';
 export const SELECTOR_CHECKOUT_DELIVERY_DATE = '.js-checkout-item-delivery-date';
+export const SELECTOR_PAYMENT_SUMMARY = '.js-payment-summary';
 export const PRODUCTS_STORAGE_NAME = 'cardProductsList';
 export const PRODUCTS_STORAGE_STATE_NAME = 'productsState';
 export const EVENT_ADD_TO_CART = 'add-to-cart';

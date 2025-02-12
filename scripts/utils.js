@@ -194,3 +194,12 @@ export function getFormatedDateString(date) {
 
   return weekDayNComma + dateString.substring(weekDayNComma.length - 1);
 }
+
+export function convertHTMLToNodeElement(template) {
+  if(!template) return;
+  
+  const parser = new DOMParser();
+  const element = parser.parseFromString(template, 'text/html');
+
+  return element.body.firstChild;
+}

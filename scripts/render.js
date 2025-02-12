@@ -4,7 +4,8 @@ import {
   getItemsQuantity,
   convertCentToDollar,
   getNextDate,
-  getFormatedDateString
+  getFormatedDateString,
+  convertHTMLToNodeElement
 } from "./utils.js";
 import { 
   EVENT_ADD_TO_CART,
@@ -17,6 +18,7 @@ import {
   SELECTOR_CHECKOUT_LIST,
   ATTRIBUTE_DELIVERY_DATE,
   EVENT_CHANGE_DELIVERY_OPTION,
+  SELECTOR_PAYMENT_SUMMARY,
 } from "./constants.js";
 import { deliveryOptions } from "../data/delivery-options.js";
 
@@ -118,25 +120,23 @@ export function renderProductCard(data) {
       ${!isCardActive ? '' : buttonHTML}
     </div>
   `;
-  const parser = new DOMParser();
-  const element = parser.parseFromString(htmlTemplate, 'text/html');
 
-  return element.body.firstChild;
+  return convertHTMLToNodeElement(htmlTemplate);
 }
 
 export function renderProducts(productsList) {
   if (!productsList) return;
 
-  const productsElement = document.querySelector(SELECTOR_PRODUCT_GRID);
-  const productsFragment = new DocumentFragment();
+  const elementProducts = document.querySelector(SELECTOR_PRODUCT_GRID);
+  const fragmentProducts = new DocumentFragment();
   
   productsList.forEach(product => {
     const productElement = renderProductCard(product);
   
-    productsFragment.append(productElement);
+    fragmentProducts.append(productElement);
   });
   
-  productsElement.append(productsFragment);
+  elementProducts.append(fragmentProducts);
 }
 
 function renderCheckoutHeaderItemsHTML(quantity) {
@@ -180,6 +180,57 @@ function renderDeliveryOptionHTML(data) {
       </div>
     </label>
   `;
+}
+
+function renderPaymentSummary(data) {
+  const {
+    quantity,
+    productsPrice,
+    shippingPrice,
+  } = data;
+
+  const summaryBeforeTax = productsPrice + shippingPrice;
+  const taxPrice = 0.1 * summaryBeforeTax;
+  const summaryPrice = taxPrice + summaryBeforeTax;
+
+  const template = `
+  <div>
+    <div class="payment-summary-title">
+      Order Summary
+    </div>
+
+    <div class="payment-summary-row">
+      <div>Items (${quantity}):</div>
+      <div class="payment-summary-money">$${convertCentToDollar(productsPrice)}</div>
+    </div>
+
+    <div class="payment-summary-row">
+      <div>Shipping &amp; handling:</div>
+      <div class="payment-summary-money">$${convertCentToDollar(shippingPrice)}</div>
+    </div>
+
+    <div class="payment-summary-row subtotal-row">
+      <div>Total before tax:</div>
+      <div class="payment-summary-money">$${convertCentToDollar(summaryBeforeTax)}</div>
+    </div>
+
+    <div class="payment-summary-row">
+      <div>Estimated tax (10%):</div>
+      <div class="payment-summary-money">$${convertCentToDollar(taxPrice)}</div>
+    </div>
+
+    <div class="payment-summary-row total-row">
+      <div>Order total:</div>
+      <div class="payment-summary-money">$${convertCentToDollar(summaryPrice)}</div>
+    </div>
+
+    <button class="place-order-button button-primary">
+      Place your order
+    </button>
+  </div>
+  `;
+
+  return convertHTMLToNodeElement(template);
 }
 
 function renderCheckoutItem(data) {
@@ -233,27 +284,32 @@ function renderCheckoutItem(data) {
       </div>
     </div>
   `;
-  const parser = new DOMParser();
-  const element = parser.parseFromString(template, 'text/html');
 
-  return element.body.firstChild;
+  return convertHTMLToNodeElement(template);
 }
 
 export function renderCheckout(cartProducts) {
   if (!cartProducts) return;
 
   const cartItemsQuantity = getItemsQuantity(cartProducts);
-  const headerItemsElement = document.querySelector(SELECTOR_CHECKOUT_HEADER_ITEMS);
-  const checkoutOrderListElement = document.querySelector(SELECTOR_CHECKOUT_LIST);
+  const elementHeaderItems = document.querySelector(SELECTOR_CHECKOUT_HEADER_ITEMS);
+  const elementCheckoutOrderList = document.querySelector(SELECTOR_CHECKOUT_LIST);
   const headerItemsHTML = renderCheckoutHeaderItemsHTML(cartItemsQuantity);
-  const fragmentElement = document.createDocumentFragment();
+  const fragmentCheckout = document.createDocumentFragment();
+  const elementPaymentSummaryContainer = document.querySelector(SELECTOR_PAYMENT_SUMMARY);
+  const elementPaymentSummary = renderPaymentSummary({
+    quantity: cartItemsQuantity,
+    productsPrice: 150, // mocked data
+    shippingPrice: 0 // mocked data
+  })
 
   cartProducts.forEach((product, index) => {
     const checkoutItemElement = renderCheckoutItem({...product, index});
   
-    fragmentElement.append(checkoutItemElement);
+    fragmentCheckout.append(checkoutItemElement);
   });
 
-  headerItemsElement.innerHTML = headerItemsHTML;
-  checkoutOrderListElement.append(fragmentElement);
+  elementHeaderItems.innerHTML = headerItemsHTML;
+  elementCheckoutOrderList.append(fragmentCheckout);
+  elementPaymentSummaryContainer.innerHTML = elementPaymentSummary.innerHTML;
 }
