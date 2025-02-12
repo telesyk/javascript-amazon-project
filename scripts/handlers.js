@@ -1,5 +1,7 @@
-import { renderProductCard } from "./render.js";
+import { renderPaymentSummary, renderProductCard } from "./render.js";
 import { 
+  setCheckoutState,
+  getCheckoutPrices,
   getCurrentProductData,
   groupCartItems,
   updateAddedMessage,
@@ -10,6 +12,7 @@ import {
   ATTRIBUTE_DATA_CONTROL,
   EVENT_ADD_TO_CART,
   SELECTOR_CHECKOUT_DELIVERY_DATE,
+  SELECTOR_PAYMENT_SUMMARY,
 } from "./constants.js";
 
 export function handleAddToCartEvent(target) {
@@ -18,37 +21,35 @@ export function handleAddToCartEvent(target) {
   const currentProductData = getCurrentProductData(productID, productQuantity);
   const currentCartState = updateCartState();
   const newCartState = groupCartItems(currentCartState, currentProductData);
-  const productElement = document.getElementById(productID);
+  const elementProduct = document.getElementById(productID);
 
   updateCartState(newCartState);
   updateCartQuantity(newCartState);
 
-  const newProductElement = renderProductCard(currentProductData);
-  productElement.innerHTML = newProductElement.innerHTML;
+  const elementNewProduct = renderProductCard(currentProductData);
+  elementProduct.innerHTML = elementNewProduct.innerHTML;
 
-  if (currentProductData) updateAddedMessage(productElement); // display message/alert "Product added"
+  if (currentProductData) updateAddedMessage(elementProduct); // display message/alert "Product added"
 }
 
 export function handleChangeQuantity(target) {
-  const cardContainerElement = document.getElementById(target.dataset.productId);
+  const elementCardContainer = document.getElementById(target.dataset.productId);
   const buttonSelector = `[${ATTRIBUTE_DATA_CONTROL}=${EVENT_ADD_TO_CART}]`;
-  const addButtonElement = cardContainerElement.querySelector(buttonSelector);
+  const elementAddButton = elementCardContainer.querySelector(buttonSelector);
   
-  addButtonElement.dataset.productQuantity = target.value;
+  elementAddButton.dataset.productQuantity = target.value;
 }
 
 export function handleChangeDeliveryOption(target) {
-  const { deliveryDate } = target.dataset;
+  const { deliveryDate, deliveryPrice } = target.dataset;
   const parentContainer = target.closest('[id]'); // SHOULD be rewrited with more conventioned style
-  const cartDeliveryDateElement = parentContainer.querySelector(SELECTOR_CHECKOUT_DELIVERY_DATE);
+  const elementCartDeliveryDate = parentContainer.querySelector(SELECTOR_CHECKOUT_DELIVERY_DATE);
 
-  /* 
-  * ADD HERE
-  * When click new delivery date
-  * should update checkoutState localy
-  * after, get new prices
-  * and re-render paymentSummary block
-  */
+  setCheckoutState(parentContainer.id, Number(deliveryPrice));
+  const currentCheckoutPrices = getCheckoutPrices();
+  const elementPaymentSummaryContainer = document.querySelector(SELECTOR_PAYMENT_SUMMARY);
+  const elementPaymentSummary = renderPaymentSummary({ ...currentCheckoutPrices });
 
-  cartDeliveryDateElement.innerHTML = deliveryDate;
+  elementCartDeliveryDate.innerHTML = deliveryDate;
+  elementPaymentSummaryContainer.innerHTML = elementPaymentSummary.innerHTML;
 }

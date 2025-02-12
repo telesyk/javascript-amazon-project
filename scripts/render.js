@@ -7,7 +7,6 @@ import {
   getFormatedDateString,
   convertHTMLToNodeElement,
   getCheckoutPrices,
-  checkoutState
 } from "./utils.js";
 import { 
   EVENT_ADD_TO_CART,
@@ -31,15 +30,15 @@ function renderQuantityStringHTML(quantity) {
   return `<div class="product-quantity-left">Only <b>${quantity}</b> left</div>`;
 }
 
-function renderSelectHTML(data) {
-  if (!data || !data.stock || !data.id) return '';
+function renderSelectHTML({id, stock}) {
+  if (!stock || !id) return '';
 
-  const optionsList = createIntArray(data.stock);
+  const optionsList = createIntArray(stock);
 
   return `
     <select 
       ${ATTRIBUTE_DATA_CONTROL}=${EVENT_SET_ITEM_QUANTITY} 
-      ${ATTRIBUTE_DATA_PRODUCT_ID}=${data.id}
+      ${ATTRIBUTE_DATA_PRODUCT_ID}=${id}
     >
       ${optionsList.map((value, index) => {
         if (index === 0) {
@@ -64,18 +63,15 @@ function renderAddButtonHTML(options) {
   `;
 }
 
-export function renderProductCard(data) {
-  if (!data) return;
-
-  const {
-    id,
-    stock,
-    priceCents,
-    quantity,
-    image,
-    name,
-    rating
-  } = data;
+export function renderProductCard({
+  id,
+  stock,
+  priceCents,
+  quantity,
+  image,
+  name,
+  rating
+}) {
   const btnOptions = {
     attr: [{
       'aria-disabled': 'false',
@@ -154,16 +150,13 @@ function renderCheckoutHeaderItemsHTML(quantity) {
   `;
 }
 
-function renderDeliveryOptionHTML(data) {
-  if (!data) return;
-
-  const {
-    index,
-    name,
-    price,
-    dateValue,
-    isChecked,
-  } = data;
+function renderDeliveryOptionHTML({
+  index,
+  name,
+  price,
+  dateValue,
+  isChecked,
+}) {
   const deliveryDateString = getFormatedDateString( getNextDate(dateValue) );
   const attributeDeliveryDate = `${ATTRIBUTE_DELIVERY_DATE}="${deliveryDateString}"`;
   const attributeDeliveryPrice = `${ATTRIBUTE_DELIVERY_PRICE}="${price}"`;
@@ -188,13 +181,11 @@ function renderDeliveryOptionHTML(data) {
   `;
 }
 
-export function renderPaymentSummary(data) {
-  const {
-    quantity,
-    productsPrice,
-    shippingPrice,
-  } = data;
-
+export function renderPaymentSummary({
+  quantity,
+  productsPrice,
+  shippingPrice,
+}) {
   const summaryBeforeTax = productsPrice + shippingPrice;
   const taxPrice = 0.1 * summaryBeforeTax;
   const summaryPrice = taxPrice + summaryBeforeTax;
@@ -239,17 +230,14 @@ export function renderPaymentSummary(data) {
   return convertHTMLToNodeElement(template);
 }
 
-function renderCheckoutItem(data) {
-  if (!data) return;
-
-  const {
-    id,
-    priceCents,
-    quantity,
-    image,
-    name,
-    index,
-  } = data;
+function renderCheckoutItem({
+  id,
+  priceCents,
+  quantity,
+  image,
+  name,
+  index,
+}) {
   const dollarPrice = convertCentToDollar(priceCents);
   const deliveryOptionsHTML = deliveryOptions.reduce((html, option) => {
     const optionHTML = renderDeliveryOptionHTML({...option, index});

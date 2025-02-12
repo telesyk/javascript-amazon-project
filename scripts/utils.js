@@ -205,7 +205,7 @@ export function convertHTMLToNodeElement(template) {
   return element.body.firstChild;
 }
 
-export function checkoutState(productID, shippingPrice) {
+export function getCheckoutState() {
   const localState = localStorage.getItem(STORAGE_NAME_CHECKOUT);
 
   if (localState) return JSON.parse(localState);
@@ -219,12 +219,21 @@ export function checkoutState(productID, shippingPrice) {
       shippingPrice: 0,
     }
   });
+
+  localStorage.setItem(STORAGE_NAME_CHECKOUT, JSON.stringify(newCheckoutState));
+  return newCheckoutState;
+}
+
+export function setCheckoutState(productID, shippingPrice) {
+  if (!productID || isNaN(shippingPrice)) return;
+
+  const currentCheckoutState = getCheckoutState();
   
-  if (productID && shippingPrice) newCheckoutState.map(product => {
-    if (productID === product.id) return {
+  const newCheckoutState = currentCheckoutState.map(product => {
+    return productID === product.id ? {
       ...product,
-      shippingPrice,
-    }
+      shippingPrice
+    } : product;
   });
 
   localStorage.setItem(STORAGE_NAME_CHECKOUT, JSON.stringify(newCheckoutState));
@@ -232,11 +241,16 @@ export function checkoutState(productID, shippingPrice) {
 }
 
 export function getCheckoutPrices() {
-  const currentCheckoutState = checkoutState();
-  const productsSummaryPrice = currentCheckoutState.reduce((total, product) => total + product.price * product.quantity, 0);
+  const currentCheckoutState = getCheckoutState();
+  const productsSummaryPrice = currentCheckoutState.reduce((total, product) => {
+    const prodPrice = product.price * product.quantity;
+    return total + prodPrice;
+  }, 0);
   const productsSummaryShippingPrice = currentCheckoutState.reduce((total, product) => total + product.shippingPrice, 0);
+  const productsQuantity = currentCheckoutState.reduce((total, product) => total + product.quantity, 0);
 
   return {
+    quantity: productsQuantity,
     productsPrice: productsSummaryPrice,
     shippingPrice: productsSummaryShippingPrice
   }
