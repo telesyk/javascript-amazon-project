@@ -1,7 +1,8 @@
 import { PRODUCTS } from "../data/products.js";
 import { 
-  PRODUCTS_STORAGE_NAME,
-  PRODUCTS_STORAGE_STATE_NAME,
+  STORAGE_NAME_PRODUCTS_CARD,
+  STORAGE_NAME_PRODUCTS,
+  STORAGE_NAME_CHECKOUT,
   SELECTOR_CART_QUANTITY,
   SELECTOR_CART_ADDED_MESSAGE,
   SELECTOR_IS_VISIBLE
@@ -13,7 +14,7 @@ import {
  * @returns an Array of numbers from 0 to ${count}
  */
 export function createIntArray(count) {
-  if (!count) return Error('Func "createIntArray" get uncorrect value "count"');
+  if (!count) return;
   let newArr = [];
 
   for (let i = 0; i < count; i++) {
@@ -27,7 +28,7 @@ export function createIntArray(count) {
  * @param {Array} attrList array of object-list attributes for button
  */
 export function convertAttrToString(attrList) {
-  if (!(attrList instanceof Array)) return Error('"attrList" is not an Array.');
+  if (!attrList || !(attrList instanceof Array)) return;
 
   let attrString = '';
 
@@ -84,7 +85,7 @@ export function getCurrentProductData(productID, productQuantity) {
  * @returns empty Array when no any data || data from localSorage
  */
 export function updateCartState(data) {
-  const localCartState = localStorage.getItem(PRODUCTS_STORAGE_NAME);
+  const localCartState = localStorage.getItem(STORAGE_NAME_PRODUCTS_CARD);
   
   if (!data) {
     if (!localCartState) return [];
@@ -92,20 +93,26 @@ export function updateCartState(data) {
     return JSON.parse(localCartState);
   }
 
-  localStorage.setItem(PRODUCTS_STORAGE_NAME, JSON.stringify(data));
+  localStorage.setItem(STORAGE_NAME_PRODUCTS_CARD, JSON.stringify(data));
 }
 
 export function updateCartQuantity(data) {
-  if (!data || !(data instanceof Array)) return new Error('Invalid value of "data"');
+  if (!data || !(data instanceof Array)) return;
   
-  let quantity = 0;
+  const quantity = getItemsQuantity(data);
   const cartQuantityElement = document.querySelector(SELECTOR_CART_QUANTITY);
-
-  data.map(item => {
-    quantity += item.quantity || 0;
-  });
   
   cartQuantityElement.innerHTML = quantity;
+}
+
+export function getItemsQuantity(data) {
+  if (!data || !(data instanceof Array)) return;
+
+  let quantity = 0;
+
+  data.map(item => quantity += item.quantity || 0);
+  
+  return quantity;
 }
 
 export function groupCartItems(cartList, newItem) {
@@ -135,18 +142,18 @@ export function groupCartItems(cartList, newItem) {
  * @returns updated products list
  */
 export function updateGeneralState(data) {
-  const localState = localStorage.getItem(PRODUCTS_STORAGE_STATE_NAME);
+  const localState = localStorage.getItem(STORAGE_NAME_PRODUCTS);
 
   if (!data) {
     if (!localState) {
-      localStorage.setItem(PRODUCTS_STORAGE_STATE_NAME, JSON.stringify(PRODUCTS));
+      localStorage.setItem(STORAGE_NAME_PRODUCTS, JSON.stringify(PRODUCTS));
       return PRODUCTS;
     };
 
     return JSON.parse(localState);
   }
 
-  localStorage.setItem(PRODUCTS_STORAGE_STATE_NAME, JSON.stringify(data));
+  localStorage.setItem(STORAGE_NAME_PRODUCTS, JSON.stringify(data));
 }
 
 export function updateAddedMessage(cardContainer) {
@@ -160,4 +167,91 @@ export function updateAddedMessage(cardContainer) {
   const timeoutId = setTimeout(() => messageElement.classList.remove(SELECTOR_IS_VISIBLE), 2500); // if previous timeoutId not exist create new one and remove css-class
 
   prevTimeoutId = timeoutId; // save new timeoutId
+}
+
+export function convertCentToDollar(cents) {
+  return (cents / 100).toFixed(2);
+}
+
+export function getNextDate(days) {
+  const daysMS = days * 86400000; // 1 day = 86400000 ms
+  const currentDateMS = Date.parse(new Date());
+
+  return new Date(currentDateMS + daysMS);
+}
+
+export function getFormatedDateString(date) {
+  const dateFormat = [
+    'en-GB',
+    {
+      month: 'long',
+      weekday: 'long',
+      day: 'numeric',
+    }
+  ];
+  
+  const dateString = date.toLocaleDateString(...dateFormat);
+  const weekDayNComma = dateString.split(' ')[0] + ',';
+
+  return weekDayNComma + dateString.substring(weekDayNComma.length - 1);
+}
+
+export function convertHTMLToNodeElement(template) {
+  if(!template) return;
+  
+  const parser = new DOMParser();
+  const element = parser.parseFromString(template, 'text/html');
+
+  return element.body.firstChild;
+}
+
+export function getCheckoutState() {
+  const localState = localStorage.getItem(STORAGE_NAME_CHECKOUT);
+
+  if (localState) return JSON.parse(localState);
+
+  const currentCartState = updateCartState();
+  const newCheckoutState = currentCartState.map(product => {
+    return {
+      id: product.id,
+      quantity: product.quantity,
+      price: product.priceCents,
+      shippingPrice: 0,
+    }
+  });
+
+  localStorage.setItem(STORAGE_NAME_CHECKOUT, JSON.stringify(newCheckoutState));
+  return newCheckoutState;
+}
+
+export function setCheckoutState(productID, shippingPrice) {
+  if (!productID || isNaN(shippingPrice)) return;
+
+  const currentCheckoutState = getCheckoutState();
+  
+  const newCheckoutState = currentCheckoutState.map(product => {
+    return productID === product.id ? {
+      ...product,
+      shippingPrice
+    } : product;
+  });
+
+  localStorage.setItem(STORAGE_NAME_CHECKOUT, JSON.stringify(newCheckoutState));
+  return newCheckoutState;
+}
+
+export function getCheckoutPrices() {
+  const currentCheckoutState = getCheckoutState();
+  const productsSummaryPrice = currentCheckoutState.reduce((total, product) => {
+    const prodPrice = product.price * product.quantity;
+    return total + prodPrice;
+  }, 0);
+  const productsSummaryShippingPrice = currentCheckoutState.reduce((total, product) => total + product.shippingPrice, 0);
+  const productsQuantity = currentCheckoutState.reduce((total, product) => total + product.quantity, 0);
+
+  return {
+    quantity: productsQuantity,
+    productsPrice: productsSummaryPrice,
+    shippingPrice: productsSummaryShippingPrice
+  }
 }
