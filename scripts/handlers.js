@@ -42,5 +42,13 @@ export function handleChangeDeliveryOption(target) {
   const parentContainer = target.closest('[id]'); // SHOULD be rewrited with more conventioned style
   const cartDeliveryDateElement = parentContainer.querySelector(SELECTOR_CHECKOUT_DELIVERY_DATE);
 
+  /* 
+  * ADD HERE
+  * When click new delivery date
+  * should update checkoutState localy
+  * after, get new prices
+  * and re-render paymentSummary block
+  */
+
   cartDeliveryDateElement.innerHTML = deliveryDate;
 }

@@ -5,7 +5,9 @@ import {
   convertCentToDollar,
   getNextDate,
   getFormatedDateString,
-  convertHTMLToNodeElement
+  convertHTMLToNodeElement,
+  getCheckoutPrices,
+  checkoutState
 } from "./utils.js";
 import { 
   EVENT_ADD_TO_CART,
@@ -19,6 +21,7 @@ import {
   ATTRIBUTE_DELIVERY_DATE,
   EVENT_CHANGE_DELIVERY_OPTION,
   SELECTOR_PAYMENT_SUMMARY,
+  ATTRIBUTE_DELIVERY_PRICE,
 } from "./constants.js";
 import { deliveryOptions } from "../data/delivery-options.js";
 
@@ -156,12 +159,14 @@ function renderDeliveryOptionHTML(data) {
 
   const {
     index,
+    name,
     price,
     dateValue,
     isChecked,
   } = data;
   const deliveryDateString = getFormatedDateString( getNextDate(dateValue) );
   const attributeDeliveryDate = `${ATTRIBUTE_DELIVERY_DATE}="${deliveryDateString}"`;
+  const attributeDeliveryPrice = `${ATTRIBUTE_DELIVERY_PRICE}="${price}"`;
   const attributeDataControl = `${ATTRIBUTE_DATA_CONTROL}="${EVENT_CHANGE_DELIVERY_OPTION}"`;
 
   return `
@@ -170,19 +175,20 @@ function renderDeliveryOptionHTML(data) {
         class="delivery-option-input"
         type="radio"
         name="delivery-option-${index}"
+        ${attributeDeliveryPrice}
         ${attributeDataControl}
         ${!dateValue ? '' : attributeDeliveryDate}
         ${!isChecked ? '' : 'checked'} 
       />
       <div>
         <div class="delivery-option-date">Within ${dateValue} ${dateValue !== 1 ? 'days' : 'day'}</div>
-        <div class="delivery-option-price">${price}</div>
+        <div class="delivery-option-price">${name}</div>
       </div>
     </label>
   `;
 }
 
-function renderPaymentSummary(data) {
+export function renderPaymentSummary(data) {
   const {
     quantity,
     productsPrice,
@@ -297,10 +303,11 @@ export function renderCheckout(cartProducts) {
   const headerItemsHTML = renderCheckoutHeaderItemsHTML(cartItemsQuantity);
   const fragmentCheckout = document.createDocumentFragment();
   const elementPaymentSummaryContainer = document.querySelector(SELECTOR_PAYMENT_SUMMARY);
+  const checkoutPrices = getCheckoutPrices();
   const elementPaymentSummary = renderPaymentSummary({
     quantity: cartItemsQuantity,
-    productsPrice: 150, // mocked data
-    shippingPrice: 0 // mocked data
+    productsPrice: checkoutPrices.productsPrice,
+    shippingPrice: checkoutPrices.shippingPrice
   })
 
   cartProducts.forEach((product, index) => {

@@ -1,7 +1,8 @@
 import { PRODUCTS } from "../data/products.js";
 import { 
-  PRODUCTS_STORAGE_NAME,
-  PRODUCTS_STORAGE_STATE_NAME,
+  STORAGE_NAME_PRODUCTS_CARD,
+  STORAGE_NAME_PRODUCTS,
+  STORAGE_NAME_CHECKOUT,
   SELECTOR_CART_QUANTITY,
   SELECTOR_CART_ADDED_MESSAGE,
   SELECTOR_IS_VISIBLE
@@ -84,7 +85,7 @@ export function getCurrentProductData(productID, productQuantity) {
  * @returns empty Array when no any data || data from localSorage
  */
 export function updateCartState(data) {
-  const localCartState = localStorage.getItem(PRODUCTS_STORAGE_NAME);
+  const localCartState = localStorage.getItem(STORAGE_NAME_PRODUCTS_CARD);
   
   if (!data) {
     if (!localCartState) return [];
@@ -92,7 +93,7 @@ export function updateCartState(data) {
     return JSON.parse(localCartState);
   }
 
-  localStorage.setItem(PRODUCTS_STORAGE_NAME, JSON.stringify(data));
+  localStorage.setItem(STORAGE_NAME_PRODUCTS_CARD, JSON.stringify(data));
 }
 
 export function updateCartQuantity(data) {
@@ -141,18 +142,18 @@ export function groupCartItems(cartList, newItem) {
  * @returns updated products list
  */
 export function updateGeneralState(data) {
-  const localState = localStorage.getItem(PRODUCTS_STORAGE_STATE_NAME);
+  const localState = localStorage.getItem(STORAGE_NAME_PRODUCTS);
 
   if (!data) {
     if (!localState) {
-      localStorage.setItem(PRODUCTS_STORAGE_STATE_NAME, JSON.stringify(PRODUCTS));
+      localStorage.setItem(STORAGE_NAME_PRODUCTS, JSON.stringify(PRODUCTS));
       return PRODUCTS;
     };
 
     return JSON.parse(localState);
   }
 
-  localStorage.setItem(PRODUCTS_STORAGE_STATE_NAME, JSON.stringify(data));
+  localStorage.setItem(STORAGE_NAME_PRODUCTS, JSON.stringify(data));
 }
 
 export function updateAddedMessage(cardContainer) {
@@ -202,4 +203,41 @@ export function convertHTMLToNodeElement(template) {
   const element = parser.parseFromString(template, 'text/html');
 
   return element.body.firstChild;
+}
+
+export function checkoutState(productID, shippingPrice) {
+  const localState = localStorage.getItem(STORAGE_NAME_CHECKOUT);
+
+  if (localState) return JSON.parse(localState);
+
+  const currentCartState = updateCartState();
+  const newCheckoutState = currentCartState.map(product => {
+    return {
+      id: product.id,
+      quantity: product.quantity,
+      price: product.priceCents,
+      shippingPrice: 0,
+    }
+  });
+  
+  if (productID && shippingPrice) newCheckoutState.map(product => {
+    if (productID === product.id) return {
+      ...product,
+      shippingPrice,
+    }
+  });
+
+  localStorage.setItem(STORAGE_NAME_CHECKOUT, JSON.stringify(newCheckoutState));
+  return newCheckoutState;
+}
+
+export function getCheckoutPrices() {
+  const currentCheckoutState = checkoutState();
+  const productsSummaryPrice = currentCheckoutState.reduce((total, product) => total + product.price * product.quantity, 0);
+  const productsSummaryShippingPrice = currentCheckoutState.reduce((total, product) => total + product.shippingPrice, 0);
+
+  return {
+    productsPrice: productsSummaryPrice,
+    shippingPrice: productsSummaryShippingPrice
+  }
 }
