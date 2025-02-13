@@ -21,6 +21,7 @@ import {
   EVENT_CHANGE_DELIVERY_OPTION,
   SELECTOR_PAYMENT_SUMMARY,
   ATTRIBUTE_DELIVERY_PRICE,
+  EVENT_REMOVE_FROM_CART,
 } from "./constants.js";
 import { deliveryOptions } from "../data/delivery-options.js";
 
@@ -245,6 +246,7 @@ function renderCheckoutItem({
   }, '');
   const deliveryOptionChecked = deliveryOptions.filter(option => option.isChecked)[0];
   const deliveryDateString = getFormatedDateString( getNextDate(deliveryOptionChecked.dateValue) );
+  const attributeDeleteDataControl = `${ATTRIBUTE_DATA_CONTROL}="${EVENT_REMOVE_FROM_CART}"`;
   const template = `
     <div class="cart-item-container" id="${id}">
       <div class="delivery-date">
@@ -260,12 +262,15 @@ function renderCheckoutItem({
             <span>
               Quantity: <span class="quantity-label">${quantity}</span>
             </span>
-            <span class="update-quantity-link link-primary">
+            <button class="update-quantity-link link-primary">
               Update
-            </span>
-            <span class="delete-quantity-link link-primary">
+            </button>
+            <button 
+              class="delete-quantity-link link-primary" 
+              ${attributeDeleteDataControl}
+            >
               Delete
-            </span>
+            </button>
           </div>
         </div>
 
@@ -305,6 +310,7 @@ export function renderCheckout(cartProducts) {
   });
 
   elementHeaderItems.innerHTML = headerItemsHTML;
+  elementCheckoutOrderList.innerHTML = ''; // used when need to re-render checkout
   elementCheckoutOrderList.append(fragmentCheckout);
   elementPaymentSummaryContainer.innerHTML = elementPaymentSummary.innerHTML;
 }

@@ -224,20 +224,10 @@ export function getCheckoutState() {
   return newCheckoutState;
 }
 
-export function setCheckoutState(productID, shippingPrice) {
-  if (!productID || isNaN(shippingPrice)) return;
+export function setCheckoutState(data) {
+  if (!data) return;
 
-  const currentCheckoutState = getCheckoutState();
-  
-  const newCheckoutState = currentCheckoutState.map(product => {
-    return productID === product.id ? {
-      ...product,
-      shippingPrice
-    } : product;
-  });
-
-  localStorage.setItem(STORAGE_NAME_CHECKOUT, JSON.stringify(newCheckoutState));
-  return newCheckoutState;
+  localStorage.setItem(STORAGE_NAME_CHECKOUT, JSON.stringify(data));
 }
 
 export function getCheckoutPrices() {
