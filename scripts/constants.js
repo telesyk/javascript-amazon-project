@@ -17,3 +17,4 @@ export const STORAGE_NAME_CHECKOUT = 'checkoutState';
 export const EVENT_ADD_TO_CART = 'add-to-cart';
 export const EVENT_SET_ITEM_QUANTITY = 'set-item-quantity';
 export const EVENT_CHANGE_DELIVERY_OPTION = 'change-delivery-option';
+export const EVENT_REMOVE_FROM_CART = 'remove-from-cart';
