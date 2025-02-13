@@ -145,7 +145,7 @@ function renderCheckoutHeaderItemsHTML(quantity) {
   const text = quantity !== 1 ? 'items' : 'item';
 
   return `
-    Checkout (<a class="return-to-home-link" href="amazon.html">
+    Checkout (<a class="return-to-home-link" href="index.html">
       ${quantity} ${text}
     </a>)
   `;
