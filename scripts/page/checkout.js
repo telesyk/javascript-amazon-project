@@ -8,7 +8,3 @@ renderCheckout(currentCheckoutState);
 
 document.addEventListener('change', onChange);
 document.addEventListener('click', onClick);
-
-/* 
-* Make delivery options same after reload
-*/

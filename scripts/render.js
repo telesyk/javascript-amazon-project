@@ -156,7 +156,7 @@ function renderDeliveryOptionHTML({
   name,
   price,
   dateValue,
-  isChecked,
+  shippingPrice,
 }) {
   const deliveryDateString = getFormatedDateString( getNextDate(dateValue) );
   const attributeDeliveryDate = `${ATTRIBUTE_DELIVERY_DATE}="${deliveryDateString}"`;
@@ -172,7 +172,7 @@ function renderDeliveryOptionHTML({
         ${attributeDeliveryPrice}
         ${attributeDataControl}
         ${!dateValue ? '' : attributeDeliveryDate}
-        ${!isChecked ? '' : 'checked'} 
+        ${shippingPrice !== price ? '' : 'checked'} 
       />
       <div>
         <div class="delivery-option-date">Within ${dateValue} ${dateValue !== 1 ? 'days' : 'day'}</div>
@@ -238,13 +238,14 @@ function renderCheckoutItem({
   image,
   name,
   index,
+  shippingPrice,
 }) {
   const dollarPrice = convertCentToDollar(priceCents);
   const deliveryOptionsHTML = deliveryOptions.reduce((html, option) => {
-    const optionHTML = renderDeliveryOptionHTML({...option, index});
+    const optionHTML = renderDeliveryOptionHTML({...option, index, shippingPrice});
     return html + optionHTML;
   }, '');
-  const deliveryOptionChecked = deliveryOptions.filter(option => option.isChecked)[0];
+  const deliveryOptionChecked = deliveryOptions.filter(option => option.price === shippingPrice)[0];
   const deliveryDateString = getFormatedDateString( getNextDate(deliveryOptionChecked.dateValue) );
   const attributeDeleteDataControl = `${ATTRIBUTE_DATA_CONTROL}="${EVENT_REMOVE_FROM_CART}"`;
   const template = `
