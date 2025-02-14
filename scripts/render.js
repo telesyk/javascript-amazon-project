@@ -140,7 +140,7 @@ export function renderProducts(productsList) {
 }
 
 function renderCheckoutHeaderItemsHTML(quantity) {
-  if (!quantity) return;
+  if (!quantity) return '';
 
   const text = quantity !== 1 ? 'items' : 'item';
 
@@ -292,7 +292,7 @@ export function renderCheckout(cartProducts) {
 
   const cartItemsQuantity = getItemsQuantity(cartProducts);
   const elementHeaderItems = document.querySelector(SELECTOR_CHECKOUT_HEADER_ITEMS);
-  const elementCheckoutOrderList = document.querySelector(SELECTOR_CHECKOUT_LIST);
+  const elementCheckoutList = document.querySelector(SELECTOR_CHECKOUT_LIST);
   const headerItemsHTML = renderCheckoutHeaderItemsHTML(cartItemsQuantity);
   const fragmentCheckout = document.createDocumentFragment();
   const elementPaymentSummaryContainer = document.querySelector(SELECTOR_PAYMENT_SUMMARY);
@@ -301,16 +301,24 @@ export function renderCheckout(cartProducts) {
     quantity: cartItemsQuantity,
     productsPrice: checkoutPrices.productsPrice,
     shippingPrice: checkoutPrices.shippingPrice
-  })
-
-  cartProducts.forEach((product, index) => {
-    const checkoutItemElement = renderCheckoutItem({...product, index});
-  
-    fragmentCheckout.append(checkoutItemElement);
   });
 
+  elementCheckoutList.innerHTML = ''; // used when need to re-render checkout
+
+  if (cartProducts.length < 1) {
+    const emptyListContainer = `
+      <p>You have yet <a href="/" title="Products page">nothing</a> in a cart</p>
+    `;
+    elementCheckoutList.innerHTML = emptyListContainer;
+  } else {
+    cartProducts.forEach((product, index) => {
+      const checkoutItemElement = renderCheckoutItem({...product, index});
+    
+      fragmentCheckout.append(checkoutItemElement);
+    });
+    elementCheckoutList.append(fragmentCheckout);
+  }
+
   elementHeaderItems.innerHTML = headerItemsHTML;
-  elementCheckoutOrderList.innerHTML = ''; // used when need to re-render checkout
-  elementCheckoutOrderList.append(fragmentCheckout);
   elementPaymentSummaryContainer.innerHTML = elementPaymentSummary.innerHTML;
 }
