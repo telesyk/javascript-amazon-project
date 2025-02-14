@@ -3,14 +3,14 @@ import { onChange, onClick } from "../actions.js";
 import { 
   updateCartQuantity,
   updateGeneralState,
-  updateCartState,
+  updateCheckoutState,
 } from "../utils.js";
 
 const currentGeneralState = updateGeneralState();
-const currentCartState = updateCartState();
+const currentCheckoutState = updateCheckoutState();
 
 renderProducts(currentGeneralState);
-updateCartQuantity(currentCartState);
+updateCartQuantity(currentCheckoutState);
 
 document.addEventListener('click', onClick);
 document.addEventListener('change', onChange);

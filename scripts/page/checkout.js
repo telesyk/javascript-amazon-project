@@ -1,18 +1,14 @@
 import { onChange, onClick } from "../actions.js";
 import { renderCheckout } from "../render.js";
-import { updateCartState } from "../utils.js";
+import { updateCheckoutState } from "../utils.js";
 
-const currentCartState = updateCartState();
+const currentCheckoutState = updateCheckoutState();
 
-renderCheckout(currentCartState);
+renderCheckout(currentCheckoutState);
 
 document.addEventListener('change', onChange);
 document.addEventListener('click', onClick);
 
 /* 
-* Make interactive "delete" buttons
-* + Update delivery date on change Radio-buttons
-* + Update Total price on change delivery options
-* + Calculate summary price 
-* Make delivery options same aftter reload
+* Make delivery options same after reload
 */
