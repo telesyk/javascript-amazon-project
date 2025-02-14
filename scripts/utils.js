@@ -102,7 +102,7 @@ export function updateCartQuantity(data) {
   const quantity = getItemsQuantity(data);
   const cartQuantityElement = document.querySelector(SELECTOR_CART_QUANTITY);
   
-  cartQuantityElement.innerHTML = quantity;
+  cartQuantityElement.innerHTML = quantity === 0 ? '' : quantity;
 }
 
 export function getItemsQuantity(data) {
