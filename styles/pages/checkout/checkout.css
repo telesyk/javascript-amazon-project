@@ -119,6 +119,19 @@
   margin-left: 3px;
 }
 
+.quantity-control {
+  display: none;
+  max-width: 40px;
+
+  &.is-visible {
+    display: initial;
+  }
+}
+
+.quantity-label:not(.is-visible) {
+  display: none;
+}
+
 @media (max-width: 1000px) {
   .delivery-options {
     /* grid-column: 1 means this element will be placed
