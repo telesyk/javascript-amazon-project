@@ -1,4 +1,9 @@
-import { renderCheckout, renderPaymentSummary, renderProductCard } from "./render.js";
+import { 
+  renderCheckout,
+  renderPaymentSummary,
+  renderProductCard,
+  renderCheckoutHeaderItemsHTML,
+} from "./render.js";
 import { 
   getCheckoutPrices,
   getCurrentProductData,
@@ -17,6 +22,7 @@ import {
   SELECTOR_PAYMENT_SUMMARY,
   SELECTOR_QUANTITY_CONTROL,
   SELECTOR_QUANTITY_LABEL,
+  SELECTOR_CHECKOUT_HEADER_ITEMS,
 } from "./constants.js";
 
 export function handleAddToCartEvent(target) {
@@ -95,6 +101,7 @@ export function handleCheckoutItemQuantity(target) {
   const elementQuantityControl = parentContainer.querySelector(SELECTOR_QUANTITY_CONTROL);
   const elementQuantityLabel = parentContainer.querySelector(SELECTOR_QUANTITY_LABEL);
   const elementPaymentSummaryContainer = document.querySelector(SELECTOR_PAYMENT_SUMMARY);
+  const elementHeaderCheckout = document.querySelector(SELECTOR_CHECKOUT_HEADER_ITEMS);
   const currentCheckoutState = updateCheckoutState();
   const currentGeneralState = updateGeneralState();
   const newProductState = (product) => {
@@ -106,9 +113,9 @@ export function handleCheckoutItemQuantity(target) {
   };
   
   target.innerText = target.innerText !== 'Save' ? 'Save' : 'Update';
+  elementQuantityLabel.innerHTML = target.dataset.productQuantity;
   elementQuantityControl.classList.toggle(SELECTOR_IS_VISIBLE);
   elementQuantityLabel.classList.toggle(SELECTOR_IS_VISIBLE);
-  elementQuantityLabel.innerHTML = target.dataset.productQuantity;
   
   const newCheckoutState = currentCheckoutState.map(product => {
     return product.id === target.dataset.productId ? newProductState(product) : product;
@@ -121,7 +128,9 @@ export function handleCheckoutItemQuantity(target) {
   updateGeneralState(newGeneralState);
 
   const checkoutPrices = getCheckoutPrices();
+  const headerCheckoutHTML = renderCheckoutHeaderItemsHTML(checkoutPrices.quantity);
   const elementNewPaymentSummary = renderPaymentSummary(checkoutPrices);
 
   elementPaymentSummaryContainer.innerHTML = elementNewPaymentSummary.innerHTML;
+  elementHeaderCheckout.innerHTML = headerCheckoutHTML;
 }

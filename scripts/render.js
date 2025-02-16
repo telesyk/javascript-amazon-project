@@ -142,7 +142,7 @@ export function renderProducts(productsList) {
   elementProducts.append(fragmentProducts);
 }
 
-function renderCheckoutHeaderItemsHTML(quantity) {
+export function renderCheckoutHeaderItemsHTML(quantity) {
   if (!quantity) return '';
 
   const text = quantity !== 1 ? 'items' : 'item';
