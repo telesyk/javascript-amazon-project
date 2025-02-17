@@ -88,13 +88,16 @@ input, select, button {
 .link-primary {
   color: rgb(1, 124, 182);
   cursor: pointer;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .link-primary:hover {
   color: rgb(196, 80, 0);
 }
 
-/* Styles for dropdown selectors. */
+/* Styles for dropdown selectors */
 select {
   color: rgb(33, 33, 33);
   background-color: rgb(240, 240, 240);

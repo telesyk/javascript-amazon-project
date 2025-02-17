@@ -4,12 +4,14 @@ import {
   EVENT_CHANGE_DELIVERY_OPTION,
   EVENT_REMOVE_FROM_CART,
   EVENT_SET_ITEM_QUANTITY,
+  EVENT_UPDATE_CHECKOUT_ITEM_QUANTITY,
 } from "./constants.js";
 import { 
   handleAddToCartEvent, 
   handleChangeDeliveryOption, 
-  handleChangeQuantity, 
-  handleRemoveFromCart 
+  handleUpdateQuantity, 
+  handleRemoveFromCart, 
+  handleCheckoutItemQuantity
 } from "./handlers.js";
 
 export const onClick = (event) => {
@@ -24,6 +26,9 @@ export const onClick = (event) => {
     case EVENT_REMOVE_FROM_CART:
       handleRemoveFromCart(event.target);
       return;
+    case EVENT_UPDATE_CHECKOUT_ITEM_QUANTITY:
+      handleCheckoutItemQuantity(event.target);
+      return;
     default:
       return;
   }
@@ -36,7 +41,7 @@ export const onChange = (event) => {
 
   switch(eventType) {
     case EVENT_SET_ITEM_QUANTITY:
-      handleChangeQuantity(event.target);
+      handleUpdateQuantity(event.target);
       return;
     case EVENT_CHANGE_DELIVERY_OPTION:
       handleChangeDeliveryOption(event.target);

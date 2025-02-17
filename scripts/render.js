@@ -22,6 +22,7 @@ import {
   SELECTOR_PAYMENT_SUMMARY,
   ATTRIBUTE_DELIVERY_PRICE,
   EVENT_REMOVE_FROM_CART,
+  EVENT_UPDATE_CHECKOUT_ITEM_QUANTITY,
 } from "./constants.js";
 import { deliveryOptions } from "../data/delivery-options.js";
 
@@ -31,22 +32,24 @@ function renderQuantityStringHTML(quantity) {
   return `<div class="product-quantity-left">Only <b>${quantity}</b> left</div>`;
 }
 
-function renderSelectHTML({id, stock}) {
+function renderSelectHTML({id, stock, attrString}) {
   if (!stock || !id) return '';
 
   const optionsList = createIntArray(stock);
+  const optionsHTMLString = optionsList.map((value, index) => {
+    if (index === 0) {
+      return `<option selected value="${value}">${value}</option>`;
+    }
+    return `<option value="${value}">${value}</option>`;
+  }).join('');
 
   return `
     <select 
+      ${!attrString  ? '' : attrString}
       ${ATTRIBUTE_DATA_CONTROL}=${EVENT_SET_ITEM_QUANTITY} 
       ${ATTRIBUTE_DATA_PRODUCT_ID}=${id}
     >
-      ${optionsList.map((value, index) => {
-        if (index === 0) {
-          return `<option selected value="${value}">${value}</option>`;
-        }
-        return `<option value="${value}">${value}</option>`;
-      })}
+      ${optionsHTMLString}
     </select>
   `;
 }
@@ -139,8 +142,8 @@ export function renderProducts(productsList) {
   elementProducts.append(fragmentProducts);
 }
 
-function renderCheckoutHeaderItemsHTML(quantity) {
-  if (!quantity) return;
+export function renderCheckoutHeaderItemsHTML(quantity) {
+  if (!quantity) return '';
 
   const text = quantity !== 1 ? 'items' : 'item';
 
@@ -156,12 +159,10 @@ function renderDeliveryOptionHTML({
   name,
   price,
   dateValue,
-  isChecked,
+  shippingPrice,
 }) {
   const deliveryDateString = getFormatedDateString( getNextDate(dateValue) );
   const attributeDeliveryDate = `${ATTRIBUTE_DELIVERY_DATE}="${deliveryDateString}"`;
-  const attributeDeliveryPrice = `${ATTRIBUTE_DELIVERY_PRICE}="${price}"`;
-  const attributeDataControl = `${ATTRIBUTE_DATA_CONTROL}="${EVENT_CHANGE_DELIVERY_OPTION}"`;
 
   return `
     <label class="delivery-option">
@@ -169,10 +170,10 @@ function renderDeliveryOptionHTML({
         class="delivery-option-input"
         type="radio"
         name="delivery-option-${index}"
-        ${attributeDeliveryPrice}
-        ${attributeDataControl}
+        ${ATTRIBUTE_DELIVERY_PRICE}=${price}
+        ${ATTRIBUTE_DATA_CONTROL}=${EVENT_CHANGE_DELIVERY_OPTION}
         ${!dateValue ? '' : attributeDeliveryDate}
-        ${!isChecked ? '' : 'checked'} 
+        ${shippingPrice !== price ? '' : 'checked'} 
       />
       <div>
         <div class="delivery-option-date">Within ${dateValue} ${dateValue !== 1 ? 'days' : 'day'}</div>
@@ -238,15 +239,18 @@ function renderCheckoutItem({
   image,
   name,
   index,
+  shippingPrice,
+  stock,
 }) {
   const dollarPrice = convertCentToDollar(priceCents);
   const deliveryOptionsHTML = deliveryOptions.reduce((html, option) => {
-    const optionHTML = renderDeliveryOptionHTML({...option, index});
+    const optionHTML = renderDeliveryOptionHTML({...option, index, shippingPrice});
     return html + optionHTML;
   }, '');
-  const deliveryOptionChecked = deliveryOptions.filter(option => option.isChecked)[0];
+  const deliveryOptionChecked = deliveryOptions.filter(option => option.price === shippingPrice)[0];
   const deliveryDateString = getFormatedDateString( getNextDate(deliveryOptionChecked.dateValue) );
-  const attributeDeleteDataControl = `${ATTRIBUTE_DATA_CONTROL}="${EVENT_REMOVE_FROM_CART}"`;
+  const selectAttrString = 'class="quantity-control js-quantity-control"';
+  const selectHTML = renderSelectHTML({id, stock: stock + quantity, attrString: selectAttrString});
   const template = `
     <div class="cart-item-container" id="${id}">
       <div class="delivery-date">
@@ -260,17 +264,20 @@ function renderCheckoutItem({
           <div class="product-price">$${dollarPrice}</div>
           <div class="product-quantity">
             <span>
-              Quantity: <span class="quantity-label">${quantity}</span>
+              Quantity: <span class="quantity-label is-visible js-quantity-label">${quantity}</span>
+              ${selectHTML}
             </span>
-            <button class="update-quantity-link link-primary">
-              Update
-            </button>
+            <button 
+              class="update-quantity-link link-primary" 
+              ${ATTRIBUTE_DATA_CONTROL}=${EVENT_UPDATE_CHECKOUT_ITEM_QUANTITY}
+              ${ATTRIBUTE_DATA_PRODUCT_QUANTITY}=${quantity} 
+              ${ATTRIBUTE_DATA_PRODUCT_ID}=${id}
+            >Update</button>
             <button 
               class="delete-quantity-link link-primary" 
-              ${attributeDeleteDataControl}
-            >
-              Delete
-            </button>
+              ${ATTRIBUTE_DATA_CONTROL}=${EVENT_REMOVE_FROM_CART}
+              ${ATTRIBUTE_DATA_PRODUCT_ID}=${id}
+            >Delete</button>
           </div>
         </div>
 
@@ -292,7 +299,7 @@ export function renderCheckout(cartProducts) {
 
   const cartItemsQuantity = getItemsQuantity(cartProducts);
   const elementHeaderItems = document.querySelector(SELECTOR_CHECKOUT_HEADER_ITEMS);
-  const elementCheckoutOrderList = document.querySelector(SELECTOR_CHECKOUT_LIST);
+  const elementCheckoutList = document.querySelector(SELECTOR_CHECKOUT_LIST);
   const headerItemsHTML = renderCheckoutHeaderItemsHTML(cartItemsQuantity);
   const fragmentCheckout = document.createDocumentFragment();
   const elementPaymentSummaryContainer = document.querySelector(SELECTOR_PAYMENT_SUMMARY);
@@ -301,16 +308,24 @@ export function renderCheckout(cartProducts) {
     quantity: cartItemsQuantity,
     productsPrice: checkoutPrices.productsPrice,
     shippingPrice: checkoutPrices.shippingPrice
-  })
-
-  cartProducts.forEach((product, index) => {
-    const checkoutItemElement = renderCheckoutItem({...product, index});
-  
-    fragmentCheckout.append(checkoutItemElement);
   });
 
+  elementCheckoutList.innerHTML = ''; // used when need to re-render checkout
+
+  if (cartProducts.length < 1) {
+    const emptyListContainer = `
+      <p>You have yet <a href="/" title="Products page">nothing</a> in a cart</p>
+    `;
+    elementCheckoutList.innerHTML = emptyListContainer;
+  } else {
+    cartProducts.forEach((product, index) => {
+      const checkoutItemElement = renderCheckoutItem({...product, index});
+    
+      fragmentCheckout.append(checkoutItemElement);
+    });
+    elementCheckoutList.append(fragmentCheckout);
+  }
+
   elementHeaderItems.innerHTML = headerItemsHTML;
-  elementCheckoutOrderList.innerHTML = ''; // used when need to re-render checkout
-  elementCheckoutOrderList.append(fragmentCheckout);
   elementPaymentSummaryContainer.innerHTML = elementPaymentSummary.innerHTML;
 }

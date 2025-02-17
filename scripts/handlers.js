@@ -1,49 +1,40 @@
-import { renderCheckout, renderPaymentSummary, renderProductCard } from "./render.js";
 import { 
-  setCheckoutState,
+  renderCheckout,
+  renderPaymentSummary,
+  renderProductCard,
+  renderCheckoutHeaderItemsHTML,
+} from "./render.js";
+import { 
   getCheckoutPrices,
   getCurrentProductData,
   groupCartItems,
   updateAddedMessage,
   updateCartQuantity,
-  updateCartState,
+  updateCheckoutState,
   updateGeneralState,
-  getCheckoutState,
 } from "./utils.js";
 import { 
   ATTRIBUTE_DATA_CONTROL,
   EVENT_ADD_TO_CART,
+  EVENT_UPDATE_CHECKOUT_ITEM_QUANTITY,
   SELECTOR_CHECKOUT_DELIVERY_DATE,
+  SELECTOR_IS_VISIBLE,
   SELECTOR_PAYMENT_SUMMARY,
+  SELECTOR_QUANTITY_CONTROL,
+  SELECTOR_QUANTITY_LABEL,
+  SELECTOR_CHECKOUT_HEADER_ITEMS,
 } from "./constants.js";
 
 export function handleAddToCartEvent(target) {
   const productID = target.dataset.productId;
   const productQuantity = Number(target.dataset.productQuantity);
   const currentProductData = getCurrentProductData(productID, productQuantity);
-  const currentCartState = updateCartState();
-  const newCartState = groupCartItems(currentCartState, currentProductData);
+  const currentCheckoutState = updateCheckoutState();
+  const newCartState = groupCartItems(currentCheckoutState, currentProductData);
   const elementProduct = document.getElementById(productID);
-  const currentCheckoutState = getCheckoutState();
-  const isInCheckout = currentCheckoutState.find(product => product.id === productID);
-  const newCheckoutState = !isInCheckout ? [
-    ...currentCheckoutState,
-    {
-      id: currentProductData.id,
-      quantity: productQuantity,
-      price: currentProductData.priceCents,
-      shippingPrice: 0,
-    },
-  ] : currentCheckoutState.map(product => {
-    return product.id === productID ? {
-      ...product,
-      quantity: productQuantity
-    } : product;
-  });
 
-  updateCartState(newCartState);
+  updateCheckoutState(newCartState);
   updateCartQuantity(newCartState);
-  setCheckoutState(newCheckoutState);
 
   const elementNewProduct = renderProductCard(currentProductData);
   elementProduct.innerHTML = elementNewProduct.innerHTML;
@@ -51,27 +42,33 @@ export function handleAddToCartEvent(target) {
   if (currentProductData) updateAddedMessage(elementProduct); // display message/alert "Product added"
 }
 
-export function handleChangeQuantity(target) {
+export function handleUpdateQuantity(target) {
   const elementCardContainer = document.getElementById(target.dataset.productId);
-  const buttonSelector = `[${ATTRIBUTE_DATA_CONTROL}=${EVENT_ADD_TO_CART}]`;
-  const elementAddButton = elementCardContainer.querySelector(buttonSelector);
-  
-  elementAddButton.dataset.productQuantity = target.value;
+  const buttons = elementCardContainer.querySelectorAll(`[${ATTRIBUTE_DATA_CONTROL}]`);
+  buttons.forEach(btn => {
+    if (
+      btn.matches(`[${ATTRIBUTE_DATA_CONTROL}=${EVENT_ADD_TO_CART}]`) ||
+      btn.matches(`[${ATTRIBUTE_DATA_CONTROL}=${EVENT_UPDATE_CHECKOUT_ITEM_QUANTITY}]`)
+    ) {
+      btn.dataset.productQuantity = target.value;
+    }
+  });
 }
 
 export function handleChangeDeliveryOption(target) {
   const { deliveryDate, deliveryPrice } = target.dataset;
   const parentContainer = target.closest('[id]'); // SHOULD be rewrited with more conventioned style
   const elementCartDeliveryDate = parentContainer.querySelector(SELECTOR_CHECKOUT_DELIVERY_DATE);
-
-  const currentCheckoutState = getCheckoutState();
+  const currentCheckoutState = updateCheckoutState();
   const newCheckoutState = currentCheckoutState.map(product => {
     return parentContainer.id === product.id ? {
       ...product,
       shippingPrice: Number(deliveryPrice)
     } : product;
-  })
-  setCheckoutState(newCheckoutState);
+  });
+
+  updateCheckoutState(newCheckoutState);
+
   const currentCheckoutPrices = getCheckoutPrices();
   const elementPaymentSummaryContainer = document.querySelector(SELECTOR_PAYMENT_SUMMARY);
   const elementPaymentSummary = renderPaymentSummary({ ...currentCheckoutPrices });
@@ -81,24 +78,59 @@ export function handleChangeDeliveryOption(target) {
 }
 
 export function handleRemoveFromCart(target) {
-  const parentContainer = target.closest('[id]'); // SHOULD be rewrited with more conventioned style
-  const productId = parentContainer.id;
-  const currentCartState = updateCartState();
+  const productId = target.dataset.productId;
+  const currentCheckoutState = updateCheckoutState();
   const currentGeneralState = updateGeneralState();
-  const removedProduct = currentCartState.filter(product => product.id === productId)[0];
-  const newCartState = currentCartState.filter(product => product.id !== productId);
+  const removedProduct = currentCheckoutState.filter(product => product.id === productId)[0];
+  const newCartState = currentCheckoutState.filter(product => product.id !== productId);
   const newGeneralState = currentGeneralState.map(product => {
     return product.id === removedProduct.id ? {
       ...product,
       stock: product.stock + removedProduct.quantity,
     } : product;
   });
-  const currentCheckoutState = getCheckoutState();
-  const newCheckoutState = currentCheckoutState.filter(product => product.id !== removedProduct.id);
 
-  updateCartState(newCartState);
+  updateCheckoutState(newCartState);
   updateGeneralState(newGeneralState);
-  setCheckoutState(newCheckoutState);
 
   renderCheckout(newCartState);
+}
+
+export function handleCheckoutItemQuantity(target) {
+  const parentContainer = document.getElementById(target.dataset.productId)
+  const elementQuantityControl = parentContainer.querySelector(SELECTOR_QUANTITY_CONTROL);
+  const elementQuantityLabel = parentContainer.querySelector(SELECTOR_QUANTITY_LABEL);
+  const elementPaymentSummaryContainer = document.querySelector(SELECTOR_PAYMENT_SUMMARY);
+  const elementHeaderCheckout = document.querySelector(SELECTOR_CHECKOUT_HEADER_ITEMS);
+  const currentCheckoutState = updateCheckoutState();
+  const currentGeneralState = updateGeneralState();
+  const newProductState = (product) => {
+    return {
+      ...product,
+      quantity: Number(target.dataset.productQuantity),
+      stock: (product.quantity + product.stock) - Number(target.dataset.productQuantity),
+    };
+  };
+  
+  target.innerText = target.innerText !== 'Save' ? 'Save' : 'Update';
+  elementQuantityLabel.innerHTML = target.dataset.productQuantity;
+  elementQuantityControl.classList.toggle(SELECTOR_IS_VISIBLE);
+  elementQuantityLabel.classList.toggle(SELECTOR_IS_VISIBLE);
+  
+  const newCheckoutState = currentCheckoutState.map(product => {
+    return product.id === target.dataset.productId ? newProductState(product) : product;
+  });
+  const newGeneralState = currentGeneralState.map(product => {
+    return product.id === target.dataset.productId ? newProductState(product) : product;
+  });
+
+  updateCheckoutState(newCheckoutState);
+  updateGeneralState(newGeneralState);
+
+  const checkoutPrices = getCheckoutPrices();
+  const headerCheckoutHTML = renderCheckoutHeaderItemsHTML(checkoutPrices.quantity);
+  const elementNewPaymentSummary = renderPaymentSummary(checkoutPrices);
+
+  elementPaymentSummaryContainer.innerHTML = elementNewPaymentSummary.innerHTML;
+  elementHeaderCheckout.innerHTML = headerCheckoutHTML;
 }

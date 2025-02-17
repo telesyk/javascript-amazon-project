@@ -1,6 +1,5 @@
 import { PRODUCTS } from "../data/products.js";
 import { 
-  STORAGE_NAME_PRODUCTS_CARD,
   STORAGE_NAME_PRODUCTS,
   STORAGE_NAME_CHECKOUT,
   SELECTOR_CART_QUANTITY,
@@ -76,6 +75,7 @@ export function getCurrentProductData(productID, productQuantity) {
     ...currentProduct[0],
     quantity: newProductQuantity,
     stock: newProductStock,
+    shippingPrice: 0,
   };
 }
 
@@ -84,8 +84,8 @@ export function getCurrentProductData(productID, productQuantity) {
  * @param {Array} data list of products in cart
  * @returns empty Array when no any data || data from localSorage
  */
-export function updateCartState(data) {
-  const localCartState = localStorage.getItem(STORAGE_NAME_PRODUCTS_CARD);
+export function updateCheckoutState(data) {
+  const localCartState = localStorage.getItem(STORAGE_NAME_CHECKOUT);
   
   if (!data) {
     if (!localCartState) return [];
@@ -93,7 +93,7 @@ export function updateCartState(data) {
     return JSON.parse(localCartState);
   }
 
-  localStorage.setItem(STORAGE_NAME_PRODUCTS_CARD, JSON.stringify(data));
+  localStorage.setItem(STORAGE_NAME_CHECKOUT, JSON.stringify(data));
 }
 
 export function updateCartQuantity(data) {
@@ -102,7 +102,7 @@ export function updateCartQuantity(data) {
   const quantity = getItemsQuantity(data);
   const cartQuantityElement = document.querySelector(SELECTOR_CART_QUANTITY);
   
-  cartQuantityElement.innerHTML = quantity;
+  cartQuantityElement.innerHTML = quantity === 0 ? '' : quantity;
 }
 
 export function getItemsQuantity(data) {
@@ -130,6 +130,7 @@ export function groupCartItems(cartList, newItem) {
       ...item,
       quantity: item.quantity + newItem.quantity,
       stock: newItem.stock,
+      shippingPrice: 0,
     }
   });
 
@@ -205,35 +206,10 @@ export function convertHTMLToNodeElement(template) {
   return element.body.firstChild;
 }
 
-export function getCheckoutState() {
-  const localState = localStorage.getItem(STORAGE_NAME_CHECKOUT);
-
-  if (localState) return JSON.parse(localState);
-
-  const currentCartState = updateCartState();
-  const newCheckoutState = currentCartState.map(product => {
-    return {
-      id: product.id,
-      quantity: product.quantity,
-      price: product.priceCents,
-      shippingPrice: 0,
-    }
-  });
-
-  localStorage.setItem(STORAGE_NAME_CHECKOUT, JSON.stringify(newCheckoutState));
-  return newCheckoutState;
-}
-
-export function setCheckoutState(data) {
-  if (!data) return;
-
-  localStorage.setItem(STORAGE_NAME_CHECKOUT, JSON.stringify(data));
-}
-
 export function getCheckoutPrices() {
-  const currentCheckoutState = getCheckoutState();
+  const currentCheckoutState = updateCheckoutState();
   const productsSummaryPrice = currentCheckoutState.reduce((total, product) => {
-    const prodPrice = product.price * product.quantity;
+    const prodPrice = product.priceCents * product.quantity;
     return total + prodPrice;
   }, 0);
   const productsSummaryShippingPrice = currentCheckoutState.reduce((total, product) => total + product.shippingPrice, 0);
