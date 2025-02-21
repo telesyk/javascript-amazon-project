@@ -13,7 +13,6 @@ import {
  * @returns an Array of numbers from 0 to ${count}
  */
 export function createIntArray(count) {
-  if (!count) return;
   let newArr = [];
 
   for (let i = 0; i < count; i++) {
@@ -24,20 +23,18 @@ export function createIntArray(count) {
 }
 
 /**
- * @param {Array} attrList array of object-list attributes for button
+ * @param {Object} attrList object-list of attributes for button
  */
 export function convertAttrToString(attrList) {
-  if (!attrList || !(attrList instanceof Array)) return;
+  if (!attrList || !(attrList instanceof Object)) return;
 
   let attrString = '';
 
-  attrList.forEach(obj => {
-    for (const [key, value] of Object.entries(obj)) {
-      attrString += ` ${key}="${value}"`;
-    }
-  });
+  for (const prop in attrList) {
+    attrString += ` ${prop}="${attrList[prop]}"`;
+  }
 
-  return attrString;
+  return attrString.trim();
 }
 
 /**
@@ -171,7 +168,7 @@ export function updateAddedMessage(cardContainer) {
 }
 
 export function convertCentToDollar(cents) {
-  return (cents / 100).toFixed(2);
+  return (Math.round(cents) / 100).toFixed(2);
 }
 
 export function getNextDate(days) {

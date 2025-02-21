@@ -77,12 +77,12 @@ export function renderProductCard({
   rating
 }) {
   const btnOptions = {
-    attr: [{
+    attr: {
       'aria-disabled': 'false',
       [ATTRIBUTE_DATA_CONTROL]: EVENT_ADD_TO_CART,
       [ATTRIBUTE_DATA_PRODUCT_ID]: id,
       [ATTRIBUTE_DATA_PRODUCT_QUANTITY]: quantity || 1,
-    }],
+    },
   };
   const isCardActive = stock > 0;
   const productRateImgName = rating.stars * 10;
