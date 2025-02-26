@@ -1,4 +1,4 @@
-import { convertCentToDollar } from "../scripts/utils.js";
+import { convertCentToDollar } from "../../scripts/utils.js";
 
 describe('convertCentToDollar return value in dollars equivalent', () => {
   it('should take value "0" and return equivalent "0.00"', () => {
