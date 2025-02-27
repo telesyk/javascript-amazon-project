@@ -76,21 +76,38 @@ export function getCurrentProductData(productID, productQuantity) {
   };
 }
 
-/**
- * 
- * @param {Array} data list of products in cart
- * @returns empty Array when no any data || data from localSorage
- */
-export function updateCheckoutState(data) {
-  const localCartState = localStorage.getItem(STORAGE_NAME_CHECKOUT);
-  
-  if (!data) {
-    if (!localCartState) return [];
+const store = {
+  get: function(key) {
+    const state = JSON.parse(localStorage.getItem(key));
 
-    return JSON.parse(localCartState);
+    return state || [];
+  },
+  set: function(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
   }
+}; // custom syntax-cougar over localStorage
 
-  localStorage.setItem(STORAGE_NAME_CHECKOUT, JSON.stringify(data));
+export function updateCheckoutState(data) {
+  const state = store.get(STORAGE_NAME_CHECKOUT);
+
+  if (!data && state.length > 0) return state;
+
+  if (!data && state.length === 0) return [];
+
+  store.set(STORAGE_NAME_CHECKOUT, data);
+}
+
+export function updateGeneralState(data) {
+  const state = store.get(STORAGE_NAME_PRODUCTS);
+
+  if (!data && state.length > 0) return state;
+
+  if (!data && state.length === 0) {
+    store.set(STORAGE_NAME_PRODUCTS, PRODUCTS);
+    return PRODUCTS;
+  };
+
+  store.set(STORAGE_NAME_PRODUCTS, data);
 }
 
 export function updateCartQuantity(data) {
@@ -132,26 +149,6 @@ export function groupCartItems(cartList, newItem) {
   });
 
   return newList;
-}
-
-/**
- * 
- * @param {Array} data set/get the global products list
- * @returns updated products list
- */
-export function updateGeneralState(data) {
-  const localState = localStorage.getItem(STORAGE_NAME_PRODUCTS);
-
-  if (!data) {
-    if (!localState) {
-      localStorage.setItem(STORAGE_NAME_PRODUCTS, JSON.stringify(PRODUCTS));
-      return PRODUCTS;
-    };
-
-    return JSON.parse(localState);
-  }
-
-  localStorage.setItem(STORAGE_NAME_PRODUCTS, JSON.stringify(data));
 }
 
 export function updateAddedMessage(cardContainer) {
