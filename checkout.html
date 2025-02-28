@@ -44,9 +44,21 @@
 
         <div class="payment-summary js-payment-summary"></div>
       </div>
+
+      <counter-element count="20"></counter-element>
+
+      <custom-element checked="true">
+        Hello
+        <span slot="description">Checked<span>
+      </custom-element>
+      <custom-element>Hello 2</custom-element>
+      <custom-element>Hello 3</custom-element>
     </div>
 
     <!-- scripts -->
     <script src="scripts/page/checkout.js" type="module" async></script>
+
+    <!-- test custom web-components -->
+    <script src="./scripts/custom-element.js" defer></script>
   </body>
 </html>
