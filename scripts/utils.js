@@ -7,6 +7,16 @@ import {
   SELECTOR_IS_VISIBLE
 } from "./constants.js";
 
+export function convertKebabToCamel(string) {
+  const arrayString = string.split('-');
+  const capitalized = arrayString.map((str, index) => {
+    if (index === 0) return;
+    return str[0].toUpperCase() + str.substring(1);
+  });
+
+  return [arrayString[0], ...capitalized].join('');
+}
+
 /**
  * 
  * @param {Number} count integer number
