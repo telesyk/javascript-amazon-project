@@ -7,9 +7,10 @@ import {
   ATTRIBUTE_DATA_CONTROL,
   ATTRIBUTE_DATA_PRODUCT_ID,
   ATTRIBUTE_DATA_PRODUCT_QUANTITY,
+  TEXT_ADD_TO_CARD,
 } from "../constants.js";
 import {
-  renderAddButtonHTML,
+  renderButton,
   renderQuantityStringHTML,
   renderSelectHTML,
 } from "../render.js";
@@ -23,23 +24,29 @@ export function renderProductCard({
   name,
   rating
 }) {
-  const btnOptions = {
-    attr: {
-      'aria-disabled': 'false',
-      [ATTRIBUTE_DATA_CONTROL]: EVENT_ADD_TO_CART,
-      [ATTRIBUTE_DATA_PRODUCT_ID]: id,
-      [ATTRIBUTE_DATA_PRODUCT_QUANTITY]: quantity || 1,
-    },
-  };
+  const buttonAttributes = [
+    { 'aria-disabled': 'false' },
+    { 'class': 'add-to-cart-button button-primary' },
+    { [ATTRIBUTE_DATA_CONTROL]: EVENT_ADD_TO_CART },
+    { [ATTRIBUTE_DATA_PRODUCT_ID]: id },
+    { [ATTRIBUTE_DATA_PRODUCT_QUANTITY]: quantity || 1 },
+  ];
   const isCardActive = stock > 0;
   const productRateImgName = rating.stars * 10;
   const dollarPrice = convertCentToDollar(priceCents);
-  const buttonHTML = renderAddButtonHTML(btnOptions);
+  const addButtonElement = renderButton(TEXT_ADD_TO_CARD);
   const quantityLeftHTML = renderQuantityStringHTML(stock);
   const selectHTML = renderSelectHTML({stock, id});
   const selectContent = stock === 0 ? 'No items left' :
                         stock === 1 ? stock :
                         selectHTML;
+
+  buttonAttributes.forEach(attribute => {
+    for (const attrName in attribute) {
+      addButtonElement.setAttribute(attrName, attribute[attrName]);
+    }
+  });
+  
   const htmlTemplate = `
     <div class="product-container" id="${id}">
       <div class="product-image-container">
@@ -67,7 +74,7 @@ export function renderProductCard({
         <img src="images/icons/checkmark.png">
         Added
       </div>
-      ${!isCardActive ? '' : buttonHTML}
+      ${!isCardActive ? '' : addButtonElement.outerHTML}
     </div>
   `;
 

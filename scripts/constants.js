@@ -20,3 +20,4 @@ export const EVENT_SET_ITEM_QUANTITY = 'set-item-quantity';
 export const EVENT_CHANGE_DELIVERY_OPTION = 'change-delivery-option';
 export const EVENT_REMOVE_FROM_CART = 'remove-from-cart';
 export const EVENT_UPDATE_CHECKOUT_ITEM_QUANTITY = 'update-checkout-item-quantity';
+export const TEXT_ADD_TO_CARD = 'Add to card';

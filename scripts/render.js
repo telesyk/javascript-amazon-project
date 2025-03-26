@@ -1,4 +1,3 @@
-import { renderAddButtonHTML } from "./render/add-button-html.js";
 import { renderCheckoutHeaderItemsHTML } from "./render/checkout-header-items-html.js";
 import { renderCheckout } from "./render/checkout.js";
 import { renderCheckoutItem } from "./render/checkout-item.js";
@@ -8,9 +7,9 @@ import { renderProductCard } from "./render/product-card.js";
 import { renderProducts } from "./render/products.js";
 import { renderQuantityStringHTML } from "./render/quantity-string-html.js";
 import { renderSelectHTML } from "./render/select-html.js";
+import { renderButton } from "./render/button.js";
 
 export {
-  renderAddButtonHTML,
   renderCheckoutHeaderItemsHTML,
   renderCheckoutItem,
   renderCheckout,
@@ -20,4 +19,5 @@ export {
   renderProducts,
   renderQuantityStringHTML,
   renderSelectHTML,
+  renderButton,
 }
