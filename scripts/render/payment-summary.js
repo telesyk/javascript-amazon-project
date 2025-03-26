@@ -14,7 +14,7 @@ export function renderPaymentSummary({
   const summaryPrice = taxPrice + summaryBeforeTax;
   const orderButtonAttributes = [
     { 'class': 'place-order-button button-primary' },
-    { 'disabled': quantity > 0 ? false : true },
+    { 'disabled': !Boolean(quantity) },
   ];
   const orderButtonElement = renderButton('Place your order', orderButtonAttributes);
 

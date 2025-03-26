@@ -63,7 +63,7 @@ button {
     }
   }
 
-  &:disabled {
+  &[disabled=true] {
     --btn-background: var(--default-1);
     --btn-border-color: var(--default-2);
     box-shadow: none;
