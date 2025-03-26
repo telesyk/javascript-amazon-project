@@ -34,18 +34,12 @@ export function renderProductCard({
   const isCardActive = stock > 0;
   const productRateImgName = rating.stars * 10;
   const dollarPrice = convertCentToDollar(priceCents);
-  const addButtonElement = renderButton(TEXT_ADD_TO_CARD);
+  const addButtonElement = renderButton(TEXT_ADD_TO_CARD, buttonAttributes);
   const quantityLeftHTML = renderQuantityStringHTML(stock);
   const selectHTML = renderSelectHTML({stock, id});
   const selectContent = stock === 0 ? 'No items left' :
                         stock === 1 ? stock :
                         selectHTML;
-
-  buttonAttributes.forEach(attribute => {
-    for (const attrName in attribute) {
-      addButtonElement.setAttribute(attrName, attribute[attrName]);
-    }
-  });
   
   const htmlTemplate = `
     <div class="product-container" id="${id}">

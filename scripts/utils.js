@@ -23,7 +23,8 @@ export function createIntArray(count) {
 }
 
 /**
- * @param {Object} attrList object-list of attributes for button
+ * NOT USED ANY MORE
+ * Need to remove and fix tests
  */
 export function convertAttrToString(attrList) {
   if (!attrList || !(attrList instanceof Object)) return;
@@ -214,4 +215,12 @@ export function getCheckoutPrices() {
     productsPrice: productsSummaryPrice,
     shippingPrice: productsSummaryShippingPrice
   }
+}
+
+export function addAttributesToElement(element, attributes) {
+  attributes.forEach(attribute => {
+    for (const attrName in attribute) {
+      element.setAttribute(attrName, attribute[attrName]);
+    }
+  });
 }

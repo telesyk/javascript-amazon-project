@@ -2,6 +2,7 @@ import {
   convertCentToDollar,
   convertHTMLToNodeElement,
 } from "../utils.js";
+import { renderButton } from "./button.js";
 
 export function renderPaymentSummary({
   quantity,
@@ -11,6 +12,11 @@ export function renderPaymentSummary({
   const summaryBeforeTax = productsPrice + shippingPrice;
   const taxPrice = 0.1 * summaryBeforeTax;
   const summaryPrice = taxPrice + summaryBeforeTax;
+  const orderButtonAttributes = [
+    { 'class': 'place-order-button button-primary' },
+    { 'disabled': quantity > 0 ? false : true },
+  ];
+  const orderButtonElement = renderButton('Place your order', orderButtonAttributes);
 
   const template = `
   <div>
@@ -43,9 +49,7 @@ export function renderPaymentSummary({
       <div class="payment-summary-money">$${convertCentToDollar(summaryPrice)}</div>
     </div>
 
-    <button class="place-order-button button-primary">
-      Place your order
-    </button>
+    ${orderButtonElement.outerHTML}
   </div>
   `;
 
