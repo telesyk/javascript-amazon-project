@@ -62,7 +62,6 @@ describe('test: getCurrentProductData', function() {
     });
 
     it(`should NOT return the product`, function() {
-      console.debug(this.product);
       expect(this.product.stock).toEqual(0);
     });
   });

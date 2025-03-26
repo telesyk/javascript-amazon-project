@@ -1,9 +1,11 @@
 :root {
+  --default-1: rgb(164, 167, 167);
+  --default-2: rgba(213, 217, 217, 0.5);
   --yellow-1: rgb(255, 216, 20);
   --yellow-2: rgb(252, 210, 0);
   /*--*/
-  --box-shadow-color: rgba(213, 217, 217, 0.5);
-  --btn-background: rgb(164, 167, 167);
+  --box-shadow-color: var(--default-2);
+  --btn-background: var(--default-1);
   --btn-text-color: rgb(33, 33, 33);
   --btn-border-color: rgb(122, 121, 121);
   --control-border-radius: 8px;
@@ -59,6 +61,14 @@ button {
       --btn-background: rgb(237, 253, 255);
       box-shadow: none;
     }
+  }
+
+  &[disabled=true] {
+    --btn-background: var(--default-1);
+    --btn-border-color: var(--default-2);
+    box-shadow: none;
+    cursor: no-drop;
+    pointer-events: none;
   }
 }
 
