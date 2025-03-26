@@ -1,18 +1,18 @@
 import {
   getItemsQuantity,
   getCheckoutPrices,
-} from "./utils.js";
+} from "../utils.js";
 import {
   SELECTOR_CHECKOUT_HEADER_ITEMS,
   SELECTOR_CHECKOUT_LIST,
   SELECTOR_PAYMENT_SUMMARY,
-} from "./constants.js";
+} from "../constants.js";
 
 import {
   renderCheckoutItem,
   renderPaymentSummary,
   renderCheckoutHeaderItemsHTML,
-} from "./render-checkout-item.js";
+} from "../render.js";
 
 export function renderCheckout(cartProducts) {
   if (!cartProducts) return;

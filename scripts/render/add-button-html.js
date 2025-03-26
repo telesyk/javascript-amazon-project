@@ -1,6 +1,6 @@
 import {
   convertAttrToString,
-} from "./utils.js";
+} from "../utils.js";
 
 export function renderAddButtonHTML(options) {
   const buttonText = !options?.content ? 'Add to Cart' : options.content;

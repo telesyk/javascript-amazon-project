@@ -3,20 +3,19 @@ import {
   getNextDate,
   getFormatedDateString,
   convertHTMLToNodeElement,
-} from "./utils.js";
+} from "../utils.js";
 import {
   ATTRIBUTE_DATA_CONTROL,
   ATTRIBUTE_DATA_PRODUCT_ID,
   ATTRIBUTE_DATA_PRODUCT_QUANTITY,
   EVENT_REMOVE_FROM_CART,
   EVENT_UPDATE_CHECKOUT_ITEM_QUANTITY,
-} from "./constants.js";
-import { deliveryOptions } from "../data/delivery-options.js";
-
+} from "../constants.js";
+import { deliveryOptions } from "../../data/delivery-options.js";
 import {
   renderDeliveryOptionHTML,
   renderSelectHTML
-} from "./render-delivery-option-html.js";
+} from "../render.js";
 
 export function renderCheckoutItem({
   id,

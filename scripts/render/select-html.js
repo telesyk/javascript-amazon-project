@@ -1,11 +1,11 @@
 import { 
   createIntArray,
-} from "./utils.js";
+} from "../utils.js";
 import { 
   ATTRIBUTE_DATA_CONTROL,
   ATTRIBUTE_DATA_PRODUCT_ID,
   EVENT_SET_ITEM_QUANTITY,
-} from "./constants.js";
+} from "../constants.js";
 
 export function renderSelectHTML({id, stock, attrString}) {
   if (!stock || !id) return '';

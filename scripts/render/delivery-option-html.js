@@ -1,13 +1,13 @@
 import {
   getNextDate,
   getFormatedDateString,
-} from "./utils.js";
+} from "../utils.js";
 import {
   ATTRIBUTE_DATA_CONTROL,
   ATTRIBUTE_DELIVERY_DATE,
   EVENT_CHANGE_DELIVERY_OPTION,
   ATTRIBUTE_DELIVERY_PRICE,
-} from "./constants.js";
+} from "../constants.js";
 
 export function renderDeliveryOptionHTML({
   index,

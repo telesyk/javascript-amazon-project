@@ -1,13 +1,13 @@
-import { renderAddButtonHTML } from "./render/add-button-html";
-import { renderCheckoutHeaderItemsHTML } from "./render/checkout-header-items-html";
-import { renderCheckout } from "./render/checkout";
-import { renderCheckoutItem } from "./render/checkout-item";
-import { renderDeliveryOptionHTML } from "./render/delivery-option-html";
-import { renderPaymentSummary } from "./render/payment-summary";
-import { renderProductCard } from "./render/product-card";
-import { renderProducts } from "./render/products";
-import { renderQuantityStringHTML } from "./render/quantity-string-html";
-import { renderSelectHTML } from "./render/select-html";
+import { renderAddButtonHTML } from "./render/add-button-html.js";
+import { renderCheckoutHeaderItemsHTML } from "./render/checkout-header-items-html.js";
+import { renderCheckout } from "./render/checkout.js";
+import { renderCheckoutItem } from "./render/checkout-item.js";
+import { renderDeliveryOptionHTML } from "./render/delivery-option-html.js";
+import { renderPaymentSummary } from "./render/payment-summary.js";
+import { renderProductCard } from "./render/product-card.js";
+import { renderProducts } from "./render/products.js";
+import { renderQuantityStringHTML } from "./render/quantity-string-html.js";
+import { renderSelectHTML } from "./render/select-html.js";
 
 export {
   renderAddButtonHTML,

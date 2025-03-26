@@ -1,18 +1,18 @@
 import {
   convertCentToDollar,
   convertHTMLToNodeElement,
-} from "./utils.js";
+} from "../utils.js";
 import { 
   EVENT_ADD_TO_CART,
   ATTRIBUTE_DATA_CONTROL,
   ATTRIBUTE_DATA_PRODUCT_ID,
   ATTRIBUTE_DATA_PRODUCT_QUANTITY,
-} from "./constants.js";
+} from "../constants.js";
 import {
   renderAddButtonHTML,
   renderQuantityStringHTML,
   renderSelectHTML,
-} from "./render-add-button-html.js";
+} from "../render.js";
 
 export function renderProductCard({
   id,

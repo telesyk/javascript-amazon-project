@@ -1,8 +1,8 @@
 import {
   SELECTOR_PRODUCT_GRID,
-} from "./constants.js";
+} from "../constants.js";
 
-import { renderProductCard } from "./render-product-card.js";
+import { renderProductCard } from "../render.js";
 
 
 export function renderProducts(productsList) {

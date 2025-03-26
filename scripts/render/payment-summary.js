@@ -1,7 +1,7 @@
 import {
   convertCentToDollar,
   convertHTMLToNodeElement,
-} from "./utils.js";
+} from "../utils.js";
 
 export function renderPaymentSummary({
   quantity,
